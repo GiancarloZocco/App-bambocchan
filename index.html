@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bambocchan Care</title>
+
+  <!-- Impostazioni per installare l'app (PWA) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d4808c">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- Unica risorsa esterna: font Nunito e icone Material Symbols Rounded -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+
+  <style>
+    /* === VARIABILI (colori, font, raggi, ombre) === */
+    :root {
+      --color-page: #f3ece3;          /* sfondo fuori dall'app (schermi grandi) */
+      --color-bg: #fbf7f1;            /* sfondo dell'app */
+      --color-card: #ffffff;          /* sfondo delle card */
+      --color-text: #2a2422;          /* testo principale */
+      --color-text-soft: #6f6560;     /* testo secondario */
+      --color-rose: #d4808c;          /* rosa principale */
+      --color-rose-soft: #fdeef0;     /* rosa chiaro (sfondi) */
+      --color-gold: #d79a5b;          /* arancio/oro per le etichette */
+      --color-gold-soft: #fbf1e4;     /* oro chiaro (sfondi) */
+      --color-track: #f0e8e1;         /* barre vuote */
+      --color-border: #f3e9e4;        /* bordi leggeri */
+      --color-danger: #b4414f;        /* rosso del pulsante elimina */
+      --color-on-accent: #ffffff;     /* testo sopra i pulsanti colorati */
+      --color-done-border: #f3ccd1;   /* bordo delle card già fatte */
+      --color-check-border: #f1d9dc;  /* bordo del cerchio da spuntare */
+      --color-note-bg: #fdf4e8;       /* sfondo del promemoria */
+      --color-note-border: #f3e3cf;   /* bordo del promemoria */
+
+      --font-main: "Nunito", system-ui, sans-serif;
+
+      --radius-card: 20px;
+      --radius-box: 16px;
+      --radius-pill: 999px;
+
+      --shadow-card: 0 4px 14px rgba(120, 90, 70, 0.08);
+      --shadow-button: 0 6px 16px rgba(212, 128, 140, 0.35);
+    }
+
+    /* === TEMI (si cambiano dal profilo: cambiano solo le variabili) === */
+    :root[data-theme="gotico"] {
+      --color-page: #0b080e; --color-bg: #15101a; --color-card: #1f1826;
+      --color-text: #efe8f3; --color-text-soft: #a99bb5;
+      --color-rose: #b3234f; --color-rose-soft: #3a1522;
+      --color-gold: #b99a5b; --color-gold-soft: #2f2616;
+      --color-track: #2e2437; --color-border: #33283d; --color-danger: #e05a77;
+      --color-done-border: #5c2036; --color-check-border: #4a3a58;
+      --color-note-bg: #251c2d; --color-note-border: #3b2d47;
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.45);
+      --shadow-button: 0 6px 16px rgba(179, 35, 79, 0.4);
+    }
+    :root[data-theme="lavanda"] {
+      --color-page: #ece8f5; --color-bg: #f6f3fc; --color-card: #ffffff;
+      --color-text: #2a2438; --color-text-soft: #6c6480;
+      --color-rose: #8d73c9; --color-rose-soft: #eee8fa;
+      --color-gold: #5fa3b8; --color-gold-soft: #e6f3f7;
+      --color-track: #e8e2f3; --color-border: #e9e3f4;
+      --color-done-border: #d3c7ee; --color-check-border: #d9d0ee;
+      --color-note-bg: #eef6f9; --color-note-border: #d4e7ee;
+      --shadow-button: 0 6px 16px rgba(141, 115, 201, 0.35);
+    }
+    :root[data-theme="menta"] {
+      --color-page: #e5efe9; --color-bg: #f2f8f4; --color-card: #ffffff;
+      --color-text: #22302a; --color-text-soft: #5f7268;
+      --color-rose: #4f9d7f; --color-rose-soft: #e3f3ec;
+      --color-gold: #d99a6c; --color-gold-soft: #fbefe6;
+      --color-track: #e0ece5; --color-border: #e1eee7;
+      --color-done-border: #bfe0d1; --color-check-border: #cfe5da;
+      --color-note-bg: #fbf3ea; --color-note-border: #f0e0cf;
+      --shadow-button: 0 6px 16px rgba(79, 157, 127, 0.35);
+    }
+
+    /* === BASE === */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--color-text);
+      background: var(--color-page);
+    }
+
+    button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
+    ul { list-style: none; }
+
+    /* Classe per le icone Material Symbols */
+    .material-symbols-rounded {
+      font-family: "Material Symbols Rounded";
+      font-weight: normal;
+      font-style: normal;
+      line-height: 1;
+      display: inline-block;
+      user-select: none;
+    }
+
+    /* === CONTENITORE APP (max 420px, centrato) === */
+    .app {
+      max-width: 420px;
+      min-height: 100vh;
+      margin: 0 auto;
+      padding-block: 20px 28px;
+      padding-left: max(18px, env(safe-area-inset-left, 0px));
+      padding-right: max(18px, env(safe-area-inset-right, 0px));
+      background: var(--color-bg);
+    }
+
+    /* === HEADER === */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 22px;
+    }
+    .header__title { font-size: 26px; font-weight: 800; }
+    .header__subtitle { margin-top: 4px; font-size: 16px; color: var(--color-text-soft); }
+    .header__profile {
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--color-card);
+      color: var(--color-rose);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      font-size: 22px;
+    }
+    .header__profile img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* Scelte nel profilo: avatar e temi */
+    .choice-title { font-size: 13px; font-weight: 700; color: var(--color-text-soft); margin: 4px 0; }
+    .avatar-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .avatar-option {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--color-bg); border: 2px solid var(--color-border);
+      font-size: 22px; display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .avatar-option img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-option.is-selected { border-color: var(--color-rose); }
+    .photo-row { display: flex; gap: 8px; margin-bottom: 14px; }
+    .small-button {
+      padding: 7px 12px; border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-rose); color: var(--color-rose);
+      font-size: 13px; font-weight: 800;
+    }
+    .theme-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+    .theme-option {
+      padding: 8px 4px; border-radius: 12px; border: 2px solid var(--color-border);
+      background: var(--color-bg); font-size: 12px; font-weight: 800; color: var(--color-text);
+    }
+    .theme-option__swatch { display: block; height: 16px; border-radius: 8px; margin-bottom: 6px; }
+    .theme-option.is-selected { border-color: var(--color-rose); }
+
+    /* === CARD PROGRESSO (solo oggi) === */
+    .progress {
+      margin-top: 22px;
+      padding: 18px 18px 20px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      box-shadow: var(--shadow-card);
+    }
+    .progress__top { display: flex; justify-content: space-between; align-items: center; }
+    .label {
+      font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-gold);
+    }
+    .progress__badge {
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      background: var(--color-rose-soft);
+      color: var(--color-rose);
+      font-size: 13px; font-weight: 800;
+    }
+    .progress__middle { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 14px; }
+    .progress__counter { font-size: 21px; font-weight: 800; }
+    .progress__day { font-size: 14px; color: var(--color-text-soft); text-align: right; }
+    .progress__bar { display: flex; gap: 6px; margin-top: 16px; min-height: 8px; }
+    .progress__segment { flex: 1; height: 8px; border-radius: var(--radius-pill); background: var(--color-track); }
+    .progress__segment.is-filled { background: var(--color-rose); }
+
+    /* === SCHEDE: AGENDA / STORICO === */
+    .tabs {
+      display: flex; gap: 4px;
+      margin-top: 18px; padding: 4px;
+      border-radius: var(--radius-pill);
+      background: var(--color-card);
+      box-shadow: var(--shadow-card);
+    }
+    .tab {
+      flex: 1; padding: 10px;
+      border-radius: var(--radius-pill);
+      font-size: 14px; font-weight: 800;
+      color: var(--color-text-soft);
+    }
+    /* Calendario */
+    .calendar { background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 14px; }
+    .calendar__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .calendar__month { font-size: 16px; font-weight: 800; text-transform: capitalize; }
+    .calendar__nav { width: 34px; height: 34px; border-radius: 50%; background: var(--color-rose-soft); color: var(--color-rose); font-size: 20px; font-weight: 800; }
+    .calendar__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .calendar__dow { font-size: 11px; font-weight: 800; color: var(--color-text-soft); padding: 4px 0; }
+    .calendar__day {
+      aspect-ratio: 1; border-radius: 10px; font-size: 14px; font-weight: 700;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      color: var(--color-text);
+    }
+    .calendar__day--empty { visibility: hidden; }
+    .calendar__day--today { border: 1.5px solid var(--color-rose); }
+    .calendar__day--selected { background: var(--color-rose); color: var(--color-on-accent); }
+    .calendar__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-gold); }
+    .calendar__day--selected .calendar__dot { background: #ffffff; }
+    .calendar__dot--none { visibility: hidden; }
+    #calendar-detail { margin-top: 14px; }
+
+    .tab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+
+    /* === AGENDA E STORICO === */
+    .agenda { margin-top: 6px; }
+    .agenda__day { margin-top: 18px; }
+    .agenda__title {
+      margin-bottom: 8px;
+      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-gold);
+    }
+    .agenda__title--today { color: var(--color-rose); }
+    .empty-day { font-size: 14px; color: var(--color-text-soft); }
+    .checklist__title {
+      margin-bottom: 10px;
+      font-size: 14px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-text-soft);
+    }
+    .checklist { margin-top: 26px; }
+    .checklist__list { display: flex; flex-direction: column; gap: 10px; }
+
+    /* Messaggi quando non c'è ancora niente */
+    .empty-message {
+      margin-top: 18px;
+      padding: 24px 16px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--color-text-soft);
+      background: var(--color-card);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-card);
+    }
+    .empty-message strong { display: block; margin-bottom: 6px; font-size: 17px; color: var(--color-text); }
+    .empty-message .material-symbols-rounded { display: block; margin-bottom: 8px; font-size: 32px; color: var(--color-rose); }
+
+    /* Singola card (voce dell'agenda, della cronologia o prodotto) */
+    .product {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-card);
+    }
+    .product.is-done { border-color: var(--color-done-border); }
+    .product__info { flex: 1; min-width: 0; }  /* min-width serve per tagliare il testo lungo con "..." */
+    .product__name {
+      font-size: 16px; font-weight: 700;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .product__meta { margin-top: 3px; font-size: 13px; color: var(--color-text-soft); }
+    .product__icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 14px;
+      font-size: 24px;
+    }
+    .product__icon--pink { background: var(--color-rose-soft); color: var(--color-rose); }
+    .product__icon--gold { background: var(--color-gold-soft); color: var(--color-gold); }
+    .product__done-mark { color: var(--color-rose); font-size: 22px; }
+
+    /* Checkbox personalizzata: l'input vero è nascosto, si vede solo il cerchio */
+    .check { cursor: pointer; display: flex; }
+    .check__input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .check__circle {
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      border: 2px solid var(--color-check-border);
+      color: transparent;
+      font-size: 16px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .check__input:checked + .check__circle { background: var(--color-rose); border-color: var(--color-rose); color: var(--color-on-accent); }
+    .check__input:focus-visible + .check__circle { outline: 2px solid var(--color-rose); outline-offset: 2px; }
+
+    /* Nome modificabile, orari e pulsante elimina (elenco prodotti) */
+    .name-input {
+      display: block; width: 100%;
+      font-family: inherit; color: inherit;
+      background: transparent;
+      border: none; border-bottom: 1px dashed transparent;
+      padding: 0;
+    }
+    .name-input:hover { border-bottom-color: var(--color-border); }
+    .name-input:focus { outline: none; border-bottom: 1px solid var(--color-rose); }
+    .times { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 8px; font-size: 12px; color: var(--color-text-soft); }
+    .times label { display: flex; align-items: center; gap: 6px; }
+    .time-input {
+      font-family: inherit; font-size: 13px;
+      color: var(--color-text);
+      background: var(--color-rose-soft);
+      border: none; border-radius: 8px;
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+    .delete-button { display: flex; align-items: center; padding: 6px; color: var(--color-text-soft); border-radius: 10px; }
+    .delete-button.is-armed { color: var(--color-on-accent); background: var(--color-danger); font-size: 13px; font-weight: 800; padding: 6px 10px; }
+
+    /* === REGOLE DELL'APP (elenco dei tipi di prodotto) === */
+    .rules { margin-top: 22px; border-radius: var(--radius-card); background: var(--color-card); box-shadow: var(--shadow-card); }
+    .rules__summary { padding: 16px 18px; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .rules__body { padding: 0 18px 18px; }
+    .rules__note { font-size: 13px; line-height: 1.5; color: var(--color-text-soft); }
+    .rules__group {
+      margin-top: 18px;
+      font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-gold);
+    }
+    .rules__item { padding: 10px 0; border-bottom: 1px solid var(--color-border); }
+    .rules__item:last-child { border-bottom: none; }
+    .rules__name { font-size: 15px; font-weight: 700; }
+    .rules__line { margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--color-text-soft); }
+    .rules__line--avoid { color: var(--color-danger); }
+
+    /* Prossima volta (prodotti 1 volta a settimana) e avvisi */
+    .next-input {
+      font-family: inherit; font-size: 13px;
+      color: var(--color-text);
+      background: var(--color-rose-soft);
+      border: none; border-radius: 8px;
+      padding: 2px 6px;
+      cursor: pointer;
+    }
+    .done-today-button {
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-rose);
+      color: var(--color-rose);
+      font-size: 12px; font-weight: 800;
+    }
+    .done-today-button:disabled { opacity: 0.55; cursor: default; }
+    .product__meta--warn { color: var(--color-danger); font-weight: 700; }
+
+    /* === PULSANTI === */
+    .add-button {
+      width: 100%; margin-top: 22px; padding: 18px;
+      border-radius: var(--radius-pill);
+      background: var(--color-rose); color: var(--color-on-accent);
+      font-size: 17px; font-weight: 800;
+      box-shadow: var(--shadow-button);
+    }
+    .add-button:active { transform: scale(0.98); }
+    .notify-button {
+      width: 100%; margin-top: 12px; padding: 14px;
+      border-radius: var(--radius-pill);
+      background: var(--color-card);
+      border: 2px solid var(--color-rose);
+      color: var(--color-rose);
+      font-size: 15px; font-weight: 800;
+    }
+    .notify-button:disabled { opacity: 0.6; cursor: default; }
+
+    /* === PROMEMORIA === */
+    .reminder {
+      display: flex; align-items: center; gap: 12px;
+      margin-top: 16px; padding: 14px;
+      border-radius: var(--radius-box);
+      background: var(--color-note-bg);
+      border: 1px solid var(--color-note-border);
+      font-size: 15px; font-weight: 600;
+    }
+    .reminder__icon {
+      width: 38px; height: 38px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      background: var(--color-card);
+      font-size: 20px;
+    }
+
+    /* === FINESTRE (nuovo prodotto e profilo) === */
+    .dialog {
+      margin: auto;                       /* serve per centrarla (il reset in alto lo azzera) */
+      width: calc(100% - 36px);
+      max-width: 380px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 22px 20px;
+      border: none;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      color: var(--color-text);
+      font-family: inherit;
+      box-shadow: 0 10px 30px rgba(42, 36, 34, 0.25);
+    }
+    .dialog::backdrop { background: rgba(42, 36, 34, 0.45); }
+    .dialog__title { font-size: 20px; font-weight: 800; margin-bottom: 14px; }
+    .dialog__hint { min-height: 40px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; color: var(--color-gold); font-weight: 700; }
+    .field { display: block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--color-text-soft); }
+    .field__input {
+      display: block; width: 100%; margin-top: 4px; padding: 10px 12px;
+      font-family: inherit; font-size: 15px; color: var(--color-text);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+    }
+    .field__input:focus { outline: 2px solid var(--color-rose); border-color: transparent; }
+    .field__input:disabled { opacity: 0.55; }
+    .needs { border: none; margin-bottom: 8px; }
+    .needs__title { font-size: 13px; font-weight: 700; color: var(--color-text-soft); margin-bottom: 4px; }
+    .need-option { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 15px; cursor: pointer; }
+    .need-option input { width: 18px; height: 18px; accent-color: var(--color-rose); }
+    .dialog__buttons { display: flex; gap: 10px; margin-top: 16px; }
+    .dialog__button {
+      flex: 1; padding: 12px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--color-rose);
+      color: var(--color-rose);
+      font-size: 15px; font-weight: 800;
+    }
+    .dialog__button--primary { background: var(--color-rose); color: var(--color-on-accent); }
+  </style>
+</head>
+
+<body>
+  <!-- Contenitore principale dell'app -->
+  <div class="app">
+
+    <!-- === HEADER: titolo, saluto e pulsante profilo === -->
+    <header class="header">
+      <div>
+        <h1 class="header__title">Bambocchan Care</h1>
+        <p class="header__subtitle" id="greeting">salve, cucciola!</p>
+      </div>
+      <button class="header__profile" id="profile-button" aria-label="Il mio profilo"></button>
+    </header>
+
+    <main>
+      <!-- === CARD PROGRESSO: conta solo quello che è previsto oggi === -->
+      <section class="progress" aria-label="Routine di oggi">
+        <div class="progress__top">
+          <h2 class="label">Routine di oggi</h2>
+          <span class="progress__badge" id="percent-text">0%</span>
+        </div>
+        <div class="progress__middle">
+          <p class="progress__counter" id="counter-text">0 / 0 fatti</p>
+          <p class="progress__day" id="day-name"></p>
+        </div>
+        <div class="progress__bar" id="progress-bar"></div>
+      </section>
+
+      <!-- === SCHEDE: Agenda (prossimi giorni) e Storico (cosa hai già fatto) === -->
+      <div class="tabs" aria-label="Scegli la vista">
+        <button class="tab is-active" id="tab-agenda" data-view="agenda" aria-pressed="true">Agenda</button>
+        <button class="tab" id="tab-calendar" data-view="calendar" aria-pressed="false">Calendario</button>
+        <button class="tab" id="tab-history" data-view="history" aria-pressed="false">Storico</button>
+      </div>
+
+      <!-- === AGENDA: i prossimi 7 giorni, con solo i prodotti previsti (la crea il JavaScript) === -->
+      <section class="agenda" id="agenda-view" aria-label="Agenda dei prossimi giorni"></section>
+
+      <!-- === CALENDARIO: scegli un giorno e vedi cosa è previsto (lo crea il JavaScript) === -->
+      <section class="calendar" id="calendar-view" aria-label="Calendario" hidden>
+        <div class="calendar__head">
+          <button class="calendar__nav" id="calendar-prev" type="button" aria-label="Mese precedente">‹</button>
+          <h3 class="calendar__month" id="calendar-month"></h3>
+          <button class="calendar__nav" id="calendar-next" type="button" aria-label="Mese successivo">›</button>
+        </div>
+        <div class="calendar__grid" id="calendar-grid"></div>
+        <div id="calendar-detail"></div>
+      </section>
+
+      <!-- === STORICO: quello che hai già segnato come fatto (lo crea il JavaScript) === -->
+      <section class="agenda" id="history-view" aria-label="Storico" hidden></section>
+
+      <!-- === PULSANTE AGGIUNGI PRODOTTO === -->
+      <button class="add-button" id="add-button">+ Aggiungi prodotto</button>
+
+      <!-- === I MIEI PRODOTTI: nome, orari e pulsante elimina === -->
+      <section class="checklist" aria-label="I miei prodotti">
+        <h2 class="checklist__title">I miei prodotti</h2>
+        <ul class="checklist__list" id="my-products-list"></ul>
+      </section>
+
+      <!-- === REGOLE: come l'app organizza ogni tipo di prodotto (le crea il JavaScript) === -->
+      <details class="rules">
+        <summary class="rules__summary">Come organizzo i prodotti</summary>
+        <div class="rules__body" id="rules-body"></div>
+      </details>
+
+      <!-- === PULSANTE NOTIFICHE === -->
+      <button class="notify-button" id="notify-button">🔔 Attiva notifiche</button>
+
+      <!-- === PROSSIMO PROMEMORIA === -->
+      <section class="reminder" aria-label="Prossimo promemoria">
+        <span class="reminder__icon">🔔</span>
+        <p id="next-reminder">Aggiungi un prodotto per ricevere i promemoria</p>
+      </section>
+    </main>
+  </div>
+
+  <!-- === FINESTRA "NUOVO PRODOTTO" === -->
+  <dialog class="dialog" id="add-dialog" aria-labelledby="add-title">
+    <form id="add-form">
+      <h2 class="dialog__title" id="add-title">Nuovo prodotto</h2>
+
+      <label class="field">Nome del prodotto
+        <input class="field__input" type="text" id="new-name" maxlength="40" required placeholder="Es. Tonico alla rosa">
+      </label>
+
+      <label class="field">Che tipo di prodotto è?
+        <select class="field__input" id="new-type"></select>
+      </label>
+
+      <label class="field">Ogni quanto lo usi?
+        <select class="field__input" id="new-freq">
+          <option value="auto">Scelgo io (consigliato)</option>
+          <option value="daily">Ogni giorno</option>
+          <option value="1">1 volta a settimana</option>
+          <option value="2">2 volte a settimana</option>
+          <option value="3">3 volte a settimana</option>
+        </select>
+      </label>
+      <label class="field" id="new-first-field">Quando lo usi la prima volta?
+        <select class="field__input" id="new-first"></select>
+      </label>
+      <p class="dialog__hint" id="new-hint"></p>
+
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="add-cancel">Annulla</button>
+        <button type="submit" class="dialog__button dialog__button--primary">Aggiungi</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- === FINESTRA "IL MIO PROFILO" === -->
+  <dialog class="dialog" id="profile-dialog" aria-labelledby="profile-title">
+    <form id="profile-form">
+      <h2 class="dialog__title" id="profile-title">Il mio profilo</h2>
+
+      <p class="choice-title">Immagine del profilo</p>
+      <div class="avatar-row" id="avatar-list"></div>
+      <div class="photo-row">
+        <button type="button" class="small-button" id="photo-button">Carica una foto</button>
+        <button type="button" class="small-button" id="photo-remove">Togli foto</button>
+        <input type="file" id="photo-input" accept="image/*" hidden>
+      </div>
+
+      <p class="choice-title">Tema</p>
+      <div class="theme-row" id="theme-list"></div>
+
+      <fieldset class="needs">
+        <legend class="needs__title">I miei bisogni (anche più di uno)</legend>
+        <div id="needs-list"></div>
+      </fieldset>
+
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="profile-cancel">Annulla</button>
+        <button type="submit" class="dialog__button dialog__button--primary">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    /* === ELEMENTI DELLA PAGINA === */
+    // Prendiamo una volta sola gli elementi fissi della pagina
+    const greeting = document.querySelector('#greeting');
+    const profileButton = document.querySelector('#profile-button');
+    const percentText = document.querySelector('#percent-text');
+    const counterText = document.querySelector('#counter-text');
+    const dayNameText = document.querySelector('#day-name');
+    const progressBar = document.querySelector('#progress-bar');
+    const tabButtons = document.querySelectorAll('.tab');
+    const calendarView = document.querySelector('#calendar-view');
+    const calendarMonth = document.querySelector('#calendar-month');
+    const calendarGrid = document.querySelector('#calendar-grid');
+    const calendarDetail = document.querySelector('#calendar-detail');
+    const agendaView = document.querySelector('#agenda-view');
+    const historyView = document.querySelector('#history-view');
+    const myProductsList = document.querySelector('#my-products-list');
+    const addButton = document.querySelector('#add-button');
+    const notifyButton = document.querySelector('#notify-button');
+    const nextReminderText = document.querySelector('#next-reminder');
+    const rulesBody = document.querySelector('#rules-body');
+
+    // Finestra "Nuovo prodotto"
+    const addDialog = document.querySelector('#add-dialog');
+    const addForm = document.querySelector('#add-form');
+    const addCancel = document.querySelector('#add-cancel');
+    const newName = document.querySelector('#new-name');
+    const newType = document.querySelector('#new-type');
+    const newFreq = document.querySelector('#new-freq');
+    const newFirst = document.querySelector('#new-first');
+    const newFirstField = document.querySelector('#new-first-field');
+    const newHint = document.querySelector('#new-hint');
+
+    // Finestra "Il mio profilo"
+    const profileDialog = document.querySelector('#profile-dialog');
+    const profileForm = document.querySelector('#profile-form');
+    const profileCancel = document.querySelector('#profile-cancel');
+    const avatarList = document.querySelector('#avatar-list');
+    const themeList = document.querySelector('#theme-list');
+    const photoButton = document.querySelector('#photo-button');
+    const photoRemove = document.querySelector('#photo-remove');
+    const photoInput = document.querySelector('#photo-input');
+    const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+    const needsList = document.querySelector('#needs-list');
+
+    /* === DATI: TIPI DI PRODOTTO (il "cervello" dell'app) === */
+    // Per ogni tipo: quando si usa (when), ogni quanto (freq), quante volte a settimana (perWeek),
+    // i giorni preferiti (preferred: 0 = lunedì ... 6 = domenica), con quali bisogni aumentano
+    // le volte (boost) e quali tipi NON vanno nello stesso giorno (avoid).
+    // fixedDays = prodotti che si usano sempre 1 volta a settimana: il giorno lo scegli tu.
+    const productTypes = [
+      { id: 'detergente', name: 'Detergente viso', icon: 'clean_hands', color: 'pink', freq: 'daily', when: 'both', avoid: [] },
+      { id: 'tonico', name: 'Tonico', icon: 'water_drop', color: 'gold', freq: 'daily', when: 'both', avoid: [] },
+      { id: 'siero-vitc', name: 'Siero vitamina C', icon: 'science', color: 'pink', freq: 'daily', when: 'morning', avoid: [] },
+      { id: 'crema-giorno', name: 'Crema idratante giorno', icon: 'light_mode', color: 'gold', freq: 'daily', when: 'morning', avoid: [] },
+      { id: 'spf', name: 'Protezione solare (SPF)', icon: 'sunny', color: 'pink', freq: 'daily', when: 'morning', avoid: [] },
+      { id: 'contorno-occhi', name: 'Contorno occhi', icon: 'visibility', color: 'gold', freq: 'daily', when: 'both', avoid: [] },
+      { id: 'crema-notte', name: 'Crema notte', icon: 'bedtime', color: 'pink', freq: 'daily', when: 'evening', avoid: [] },
+      { id: 'balsamo-labbra', name: 'Balsamo labbra', icon: 'spa', color: 'gold', freq: 'daily', when: 'evening', avoid: [] },
+      { id: 'retinolo', name: 'Retinolo', icon: 'auto_fix_high', color: 'pink', freq: 'weekly', when: 'evening',
+        perWeek: 2, preferred: [1, 4],
+        boost: { needs: ['macchie', 'antieta'], perWeek: 3, preferred: [0, 2, 4] },
+        avoid: ['acidi', 'esfoliante', 'maschera-argilla'] },
+      { id: 'acidi', name: 'Acido esfoliante (AHA/BHA)', icon: 'experiment', color: 'gold', freq: 'weekly', when: 'evening',
+        perWeek: 1, preferred: [3],
+        boost: { needs: ['acne', 'macchie'], perWeek: 2, preferred: [3, 6] },
+        avoid: ['retinolo', 'esfoliante', 'maschera-argilla'] },
+      { id: 'esfoliante', name: 'Esfoliante / scrub viso', icon: 'cleaning_services', color: 'pink', freq: 'weekly', when: 'evening',
+        perWeek: 1, preferred: [2],
+        boost: { needs: ['grassa', 'acne'], perWeek: 2, preferred: [2, 5] },
+        avoid: ['retinolo', 'acidi', 'maschera-argilla'] },
+      { id: 'maschera-argilla', name: 'Maschera purificante (argilla)', icon: 'texture', color: 'gold', freq: 'weekly', when: 'evening',
+        perWeek: 1, preferred: [6],
+        boost: { needs: ['grassa'], perWeek: 2, preferred: [6, 3] },
+        avoid: ['retinolo', 'acidi', 'esfoliante'] },
+      { id: 'maschera-idratante', name: 'Maschera idratante', icon: 'face', color: 'pink', freq: 'weekly', when: 'evening',
+        perWeek: 1, preferred: [0],
+        boost: { needs: ['secca'], perWeek: 2, preferred: [0, 3] },
+        avoid: [] },
+      { id: 'scrub-capelli', name: 'Scrub capelli', icon: 'air', color: 'gold', freq: 'weekly', when: 'evening', fixedDays: [3], avoid: [] },
+      { id: 'pennelli', name: 'Cambio pennelli', icon: 'brush', color: 'pink', freq: 'weekly', when: 'evening', fixedDays: [5], avoid: [] },
+      { id: 'asciugamano', name: 'Cambio asciugamano', icon: 'dry_cleaning', color: 'gold', freq: 'weekly', when: 'evening', fixedDays: [6], avoid: [] },
+      { id: 'al-bisogno', name: 'Al bisogno (quando capita)', icon: 'healing', color: 'pink', freq: 'asNeeded', when: 'asNeeded', avoid: [] }
+    ];
+
+    // I bisogni che si possono scegliere nel profilo
+    const needsOptions = [
+      { id: 'secca', label: 'Pelle secca' },
+      { id: 'grassa', label: 'Pelle grassa' },
+      { id: 'acne', label: 'Acne / imperfezioni' },
+      { id: 'macchie', label: 'Macchie' },
+      { id: 'antieta', label: 'Anti-età' }
+    ];
+
+    // Giorni usati quando scegli tu quante volte a settimana (1, 2 o 3)
+    const genericPatterns = { 1: [2], 2: [1, 4], 3: [0, 2, 4] };
+
+    // Orari di partenza per i promemoria
+    const DEFAULT_TIMES = { morning: '08:15', evening: '21:30' };
+
+    // Nomi per le date. weekdayNames parte da domenica (come getDay), gli altri da lunedì
+    const weekdayNames = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+    const longDayNames = ['lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'];
+    const shortDayNames = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+    const monthNames = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+
+    /* === STATO DELL'APP === */
+    let products = [];                          // i prodotti dell'utente
+    let profile = { needs: [], theme: 'rosa', avatar: '', photo: '' };      // bisogni, tema, avatar e foto
+    let doneLog = {};                           // cosa è stato fatto, giorno per giorno
+    let sentNotifications = [];                 // notifiche già inviate oggi (per non ripeterle)
+    let renderedDayKey = '';                    // giorno mostrato (serve a cambiare giorno a mezzanotte)
+    let armedDeleteId = '';                     // prodotto che aspetta la conferma di eliminazione
+    let idCounter = 0;                          // serve a creare id sempre diversi
+
+    /* === SALVATAGGIO NEL BROWSER (localStorage) === */
+    // Legge un valore salvato; se non c'è (o il browser lo blocca) restituisce quello di riserva
+    function readJson(key, fallbackValue) {
+      let text = null;
+
+      try {
+        text = localStorage.getItem(key);
+      } catch (error) {
+        text = null;
+      }
+
+      if (text === null) {
+        return fallbackValue;
+      }
+
+      try {
+        return JSON.parse(text); // da testo a dati
+      } catch (error) {
+        return fallbackValue;
+      }
+    }
+
+    // Salva un valore (localStorage salva solo testo, quindi JSON.stringify)
+    function writeJson(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        // se il browser non permette di salvare, l'app funziona lo stesso fino alla chiusura
+      }
+    }
+
+    function saveProducts() { writeJson('care2-products', products); }
+    function saveProfile() { writeJson('care2-profile', profile); }
+    function saveLog() { writeJson('care2-log', doneLog); }
+
+    /* === DATE === */
+    // Data di oggi spostata di "offset" giorni (-1 = ieri, 1 = domani). Alle 12 per evitare problemi di ora legale
+    function getDateWithOffset(offset) {
+      const date = new Date();
+      date.setHours(12, 0, 0, 0);
+      date.setDate(date.getDate() + offset);
+      return date;
+    }
+
+    // Chiave di una data (es. "2026-10-28"): serve per salvare le spunte di quel giorno
+    function getDateKey(date) {
+      return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+
+    // Numero progressivo del giorno: serve per confrontare le date
+    function getDayNumber(date) {
+      return Math.floor(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000);
+    }
+
+    // Posizione nel giorno della settimana: 0 = lunedì ... 6 = domenica
+    function getWeekdayIndex(date) {
+      return (date.getDay() + 6) % 7;
+    }
+
+    // Numero del giorno di oggi
+    function getTodayNumber() {
+      return getDayNumber(new Date());
+    }
+
+    // Da numero del giorno a data (a mezzanotte UTC: per i nomi si usano le funzioni getUTC...)
+    function dayNumberToDate(dayNumber) {
+      return new Date(dayNumber * 86400000);
+    }
+
+    // Posizione nella settimana di un giorno: 0 = lunedì ... 6 = domenica
+    function getWeekdayIndexFromDayNumber(dayNumber) {
+      return (dayNumberToDate(dayNumber).getUTCDay() + 6) % 7;
+    }
+
+    // Testo di un giorno: "giovedì 5 novembre"
+    function formatDayNumber(dayNumber) {
+      const date = dayNumberToDate(dayNumber);
+      return longDayNames[getWeekdayIndexFromDayNumber(dayNumber)] + ' ' + date.getUTCDate() + ' ' + monthNames[date.getUTCMonth()];
+    }
+
+    // Da numero del giorno a testo per il campo data ("2026-11-05") e viceversa
+    function dayNumberToInputValue(dayNumber) {
+      return dayNumberToDate(dayNumber).toISOString().slice(0, 10);
+    }
+
+    function inputValueToDayNumber(value) {
+      const parts = value.split('-');
+      return Math.floor(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])) / 86400000);
+    }
+
+    // Trasforma "08:15" in minuti dalla mezzanotte (08:15 -> 495)
+    function timeToMinutes(time) {
+      const parts = time.split(':');
+      return Number(parts[0]) * 60 + Number(parts[1]);
+    }
+
+    // Titolo di un giorno nell'agenda: "Oggi · Mercoledì 28 ottobre"
+    function getDayLabel(offset, date) {
+      let text = weekdayNames[date.getDay()] + ' ' + date.getDate() + ' ' + monthNames[date.getMonth()];
+
+      if (offset === 0) { text = 'Oggi · ' + text; }
+      if (offset === 1) { text = 'Domani · ' + text; }
+      if (offset === -1) { text = 'Ieri · ' + text; }
+      return text;
+    }
+
+    /* === PRODOTTI E TIPI === */
+    function getType(typeId) {
+      const found = productTypes.find(function (type) {
+        return type.id === typeId;
+      });
+      if (found === undefined) {
+        return productTypes[productTypes.length - 1]; // se non lo trova usa "Al bisogno"
+      }
+      return found;
+    }
+
+    function getProductById(id) {
+      return products.find(function (product) {
+        return product.id === id;
+      });
+    }
+
+    // Crea un prodotto nuovo. createdOn e createdMin servono a non mostrare nell'agenda
+    // cose "già passate" (per esempio il tonico della mattina, se lo aggiungi di sera).
+    // firstDay è il primo giorno scelto da te per i prodotti "1 volta a settimana"
+    function createProduct(typeId, name, freq, firstDay) {
+      const now = new Date();
+      idCounter = idCounter + 1;
+
+      let nextDue = getDayNumber(now);
+      if (firstDay !== undefined) {
+        nextDue = firstDay;
+      }
+
+      return {
+        id: 'p' + Date.now() + 'x' + idCounter,
+        type: typeId,
+        name: name,
+        freq: freq,
+        times: { morning: DEFAULT_TIMES.morning, evening: DEFAULT_TIMES.evening },
+        createdOn: getDayNumber(now),
+        createdMin: now.getHours() * 60 + now.getMinutes(),
+        nextDue: nextDue,   // prossimo giorno previsto (per i prodotti "1 volta a settimana")
+        lastDone: null      // ultimo giorno in cui l'hai segnato come fatto
+      };
+    }
+
+    // Prossimo giorno previsto di un prodotto "1 volta a settimana"
+    function getNextDue(product) {
+      if (product.nextDue === undefined) {
+        return product.createdOn;
+      }
+      return product.nextDue;
+    }
+
+    // Se è in ritardo, la prossima volta realistica è oggi (quando lo segni)
+    function getEffectiveNextDue(product) {
+      return Math.max(getNextDue(product), getTodayNumber());
+    }
+
+    // Il prodotto "1 volta a settimana" è in programma in questo giorno?
+    function isRollingDueOn(product, dayNumber, todayNumber) {
+      const nextDue = getNextDue(product);
+
+      if (dayNumber === todayNumber) {
+        // Oggi: è in programma, in ritardo oppure l'hai appena segnato
+        return nextDue <= todayNumber || product.lastDone === todayNumber;
+      }
+      if (dayNumber < todayNumber) {
+        return false;
+      }
+      if (nextDue > todayNumber) {
+        return dayNumber >= nextDue && (dayNumber - nextDue) % 7 === 0;
+      }
+      // In ritardo: la prossima volta sarà 7 giorni dopo il giorno in cui lo segni (oggi)
+      return (dayNumber - todayNumber) % 7 === 0;
+    }
+
+    // Segna (o toglie) il "fatto di oggi" per un prodotto "1 volta a settimana":
+    // la prossima volta diventa tra 7 giorni da oggi, qualunque giorno fosse previsto
+    function applyRollingDone(product, isDone) {
+      const todayNumber = getTodayNumber();
+
+      if (isDone) {
+        product.prevNextDue = getNextDue(product);   // ricordo i valori di prima, per poter annullare
+        product.prevLastDone = product.lastDone;
+        product.lastDone = todayNumber;
+        product.nextDue = todayNumber + 7;
+      } else if (product.lastDone === todayNumber) {
+        if (product.prevNextDue === undefined) {
+          product.nextDue = todayNumber;
+        } else {
+          product.nextDue = product.prevNextDue;
+        }
+        if (product.prevLastDone === undefined) {
+          product.lastDone = null;
+        } else {
+          product.lastDone = product.prevLastDone;
+        }
+      }
+
+      saveProducts();
+    }
+
+    function hasNeed(needs) {
+      return needs.some(function (need) {
+        return profile.needs.includes(need);
+      });
+    }
+
+    // Come viene usato il prodotto:
+    // 'daily' = ogni giorno
+    // 'rolling' = 1 volta a settimana: il giorno lo scegli tu e la settimana riparte da quando lo segni
+    // 'weekly' = 2-3 volte a settimana: i giorni li sceglie l'app
+    // 'asNeeded' = quando capita
+    function getEffectiveKind(product) {
+      const type = getType(product.type);
+
+      if (type.freq === 'asNeeded') { return 'asNeeded'; }
+      if (type.fixedDays) { return 'rolling'; }
+      if (product.freq === 'daily') { return 'daily'; }
+      if (product.freq === '1' || product.freq === '2' || product.freq === '3') {
+        if (getTimesPerWeek(product) === 1) { return 'rolling'; }
+        return 'weekly';
+      }
+      if (type.freq === 'daily') { return 'daily'; }
+      if (getTimesPerWeek(product) === 1) { return 'rolling'; }
+      return 'weekly';
+    }
+
+    // Quante volte a settimana va usato (di più se il profilo ha certi bisogni)
+    function getTimesPerWeek(product) {
+      const type = getType(product.type);
+
+      if (type.fixedDays) {
+        return 1;
+      }
+      if (product.freq === '1' || product.freq === '2' || product.freq === '3') {
+        return Number(product.freq);
+      }
+      if (type.boost && hasNeed(type.boost.needs)) {
+        return type.boost.perWeek;
+      }
+      return type.perWeek;
+    }
+
+    // I giorni in cui l'app vorrebbe metterlo (se non ci sono conflitti)
+    function getPreferredDays(product) {
+      const type = getType(product.type);
+
+      if (product.freq === '1' || product.freq === '2' || product.freq === '3' || type.preferred === undefined) {
+        return genericPatterns[getTimesPerWeek(product)];
+      }
+      if (type.boost && hasNeed(type.boost.needs)) {
+        return type.boost.preferred;
+      }
+      return type.preferred;
+    }
+
+    // I momenti della giornata in cui si usa: mattina, sera o entrambi
+    function getMoments(type) {
+      if (type.when === 'both') { return ['morning', 'evening']; }
+      if (type.when === 'asNeeded') { return []; }
+      return [type.when];
+    }
+
+    /* === PIANIFICAZIONE AUTOMATICA === */
+    // Due tipi sono in conflitto se uno dei due dice di non usarlo insieme all'altro
+    function typesConflict(typeA, typeB) {
+      return typeA.avoid.includes(typeB.id) || typeB.avoid.includes(typeA.id);
+    }
+
+    // Costruisce il piano della settimana: per ogni giorno, i prodotti "settimanali" da usare.
+    // Parte dai giorni preferiti e, se ci sono conflitti, prova a spostarli di qualche giorno.
+    function planWeek() {
+      const week = [[], [], [], [], [], [], []];
+
+      // I prodotti "1 volta a settimana" hanno il giorno scelto da te: li segno per primi,
+      // così gli altri prodotti li evitano se non vanno usati insieme
+      products.forEach(function (product) {
+        if (getEffectiveKind(product) === 'rolling') {
+          week[getWeekdayIndexFromDayNumber(getEffectiveNextDue(product))].push(product.id);
+        }
+      });
+
+      const weeklyProducts = products.filter(function (product) {
+        return getEffectiveKind(product) === 'weekly';
+      });
+
+      // Prima i prodotti con più incompatibilità, così trovano posto più facilmente
+      weeklyProducts.sort(function (a, b) {
+        return getType(b.type).avoid.length - getType(a.type).avoid.length;
+      });
+
+      weeklyProducts.forEach(function (product) {
+        const type = getType(product.type);
+        let days = [];
+
+        if (getEffectiveKind(product) === 'weekly') {
+          const preferred = getPreferredDays(product);
+          let bestOffset = 0;
+          let bestScore = 100000;
+
+          for (let offset = 0; offset < 7; offset++) {
+            let score = offset; // meglio restare vicino ai giorni preferiti
+
+            preferred.forEach(function (day) {
+              const dayIndex = (day + offset) % 7;
+              score = score + week[dayIndex].length; // meglio i giorni più liberi
+
+              week[dayIndex].forEach(function (otherId) {
+                const otherType = getType(getProductById(otherId).type);
+                if (typesConflict(type, otherType)) {
+                  score = score + 100; // un conflitto pesa tantissimo
+                }
+              });
+            });
+
+            if (score < bestScore) {
+              bestScore = score;
+              bestOffset = offset;
+            }
+          }
+
+          days = preferred.map(function (day) {
+            return (day + bestOffset) % 7;
+          });
+        }
+
+        days.forEach(function (dayIndex) {
+          week[dayIndex].push(product.id);
+        });
+      });
+
+      return week;
+    }
+
+    // Tutte le voci previste in una data (un prodotto "mattina e sera" diventa due voci)
+    function getItemsForDate(date, week) {
+      const weekdayIndex = getWeekdayIndex(date);
+      const dayNumber = getDayNumber(date);
+      const todayNumber = getTodayNumber();
+      const items = [];
+
+      products.forEach(function (product) {
+        const kind = getEffectiveKind(product);
+        const type = getType(product.type);
+
+        if (kind === 'asNeeded') {
+          return; // "quando capita" non entra nell'agenda
+        }
+        if (dayNumber < product.createdOn) {
+          return; // il prodotto non esisteva ancora in quel giorno
+        }
+        if (kind === 'weekly' && !week[weekdayIndex].includes(product.id)) {
+          return; // oggi non è un giorno di questo prodotto
+        }
+
+        // "1 volta a settimana": conta il giorno scelto da te e l'ultima volta che lo hai segnato
+        let lateSince = 0;
+        if (kind === 'rolling') {
+          if (!isRollingDueOn(product, dayNumber, todayNumber)) {
+            return;
+          }
+          if (dayNumber === todayNumber && getNextDue(product) < todayNumber) {
+            lateSince = getNextDue(product); // è in ritardo: lo mostro finché non lo segni
+          }
+        }
+
+        getMoments(type).forEach(function (moment) {
+          const time = product.times[moment];
+
+          // Se lo hai aggiunto oggi, salta gli orari già passati al momento dell'aggiunta
+          // (non vale per i prodotti "1 volta a settimana": il primo giorno lo hai scelto tu)
+          if (kind !== 'rolling' && dayNumber === product.createdOn && timeToMinutes(time) < product.createdMin) {
+            return;
+          }
+
+          items.push({
+            id: product.id + '_' + moment,
+            productId: product.id,
+            name: product.name,
+            type: type,
+            moment: moment,
+            time: time,
+            lateSince: lateSince,
+            warnWith: []
+          });
+        });
+      });
+
+      // Segna le voci che non vanno usate insieme nello stesso giorno
+      items.forEach(function (item) {
+        items.forEach(function (other) {
+          if (other.productId !== item.productId && typesConflict(item.type, other.type)) {
+            item.warnWith.push(other.name);
+          }
+        });
+      });
+
+      items.sort(sortByTime);
+      return items;
+    }
+
+    function sortByTime(a, b) {
+      if (a.time < b.time) { return -1; }
+      if (a.time > b.time) { return 1; }
+      return 0;
+    }
+
+    /* === TESTI DESCRITTIVI === */
+    function momentText(type) {
+      if (type.when === 'both') { return 'mattina e sera'; }
+      if (type.when === 'morning') { return 'mattina'; }
+      return 'sera';
+    }
+
+    // Elenco di giorni in italiano: "lunedì, mercoledì e venerdì"
+    function dayNamesText(days) {
+      const names = days.map(function (day) {
+        return longDayNames[day];
+      });
+
+      if (names.length === 1) { return names[0]; }
+      return names.slice(0, names.length - 1).join(', ') + ' e ' + names[names.length - 1];
+    }
+
+    // Come verrà organizzato un prodotto (suggerimento nella finestra "Nuovo prodotto")
+    function describePlan(product) {
+      const type = getType(product.type);
+      const kind = getEffectiveKind(product);
+
+      if (kind === 'asNeeded') {
+        return 'Quando capita: non ti mando promemoria.';
+      }
+      if (kind === 'daily') {
+        return 'Ogni giorno, ' + momentText(type) + '.';
+      }
+      if (kind === 'rolling') {
+        return '1 volta a settimana, ' + momentText(type) + '. Scegli tu il primo giorno: poi te lo ricordo ogni 7 giorni da quando lo segni.';
+      }
+
+      const times = getTimesPerWeek(product);
+      let timesText = times + ' volte a settimana';
+      if (times === 1) {
+        timesText = '1 volta a settimana';
+      }
+      return timesText + ', di solito ' + dayNamesText(getPreferredDays(product)) + ', ' + momentText(type) + '.';
+    }
+
+    // Descrizione nell'elenco "I miei prodotti", con i giorni reali della settimana
+    function describeSchedule(product, week) {
+      const type = getType(product.type);
+      const kind = getEffectiveKind(product);
+
+      if (kind === 'asNeeded') {
+        return 'Quando capita';
+      }
+      if (kind === 'daily') {
+        return 'Ogni giorno, ' + momentText(type);
+      }
+      if (kind === 'rolling') {
+        const nextDue = getNextDue(product);
+
+        if (nextDue < getTodayNumber()) {
+          return 'In ritardo da ' + formatDayNumber(nextDue) + ': te lo ricordo finché non lo segni';
+        }
+        return 'Prossima volta ' + formatDayNumber(nextDue) + ', poi ogni 7 giorni';
+      }
+
+      const days = [];
+      week.forEach(function (ids, index) {
+        if (ids.includes(product.id)) {
+          days.push(shortDayNames[index]);
+        }
+      });
+      return days.join(' · ') + ', ' + momentText(type);
+    }
+
+    /* === CRONOLOGIA: COSA HAI FATTO === */
+    function isItemDone(dateKey, itemId) {
+      const entries = doneLog[dateKey];
+
+      if (entries === undefined) {
+        return false;
+      }
+      return entries.some(function (entry) {
+        return entry.itemId === itemId;
+      });
+    }
+
+    // Aggiunge o toglie una voce dalla cronologia del giorno
+    function setItemDone(dateKey, item, isDone) {
+      let entries = doneLog[dateKey];
+
+      if (entries === undefined) {
+        entries = [];
+      }
+
+      // Prima toglie la voce (se c'è), poi la rimette se è fatta
+      entries = entries.filter(function (entry) {
+        return entry.itemId !== item.id;
+      });
+
+      if (isDone) {
+        entries.push({
+          itemId: item.id,
+          name: item.name,
+          typeName: item.type.name,
+          icon: item.type.icon,
+          color: item.type.color,
+          time: item.time
+        });
+      }
+
+      doneLog[dateKey] = entries;
+      saveLog();
+    }
+
+    /* === DISEGNO: AGENDA === */
+    // Crea il riquadro con l'icona del tipo di prodotto
+    function createIconBox(icon, color) {
+      const box = document.createElement('div');
+      box.className = 'product__icon product__icon--' + color;
+
+      const symbol = document.createElement('span');
+      symbol.className = 'material-symbols-rounded';
+      symbol.textContent = icon;
+
+      box.appendChild(symbol);
+      return box;
+    }
+
+    // Crea la card di una voce dell'agenda (la spunta c'è solo per oggi)
+    function createAgendaCard(item, isToday, isDone) {
+      const card = document.createElement('li');
+      card.className = 'product';
+      card.classList.toggle('is-done', isDone);
+
+      if (isToday) {
+        const label = document.createElement('label');
+        label.className = 'check';
+        label.innerHTML = `
+          <input type="checkbox" class="check__input" aria-label="Segna come fatto">
+          <span class="check__circle"><span class="material-symbols-rounded">check</span></span>
+        `;
+
+        const checkbox = label.querySelector('.check__input');
+        checkbox.checked = isDone;
+        checkbox.dataset.itemId = item.id;
+        card.appendChild(label);
+      }
+
+      card.appendChild(createIconBox(item.type.icon, item.type.color));
+
+      const info = document.createElement('div');
+      info.className = 'product__info';
+
+      const name = document.createElement('p');
+      name.className = 'product__name';
+      name.textContent = item.name;
+
+      const meta = document.createElement('p');
+      meta.className = 'product__meta';
+      meta.textContent = item.time + ' · ' + item.type.name;
+      if (item.lateSince > 0) {
+        meta.textContent = meta.textContent + ' · in ritardo da ' + formatDayNumber(item.lateSince);
+      }
+
+      info.appendChild(name);
+      info.appendChild(meta);
+
+      // Avviso se nello stesso giorno c'è un prodotto che non va usato insieme
+      if (item.warnWith.length > 0) {
+        const warning = document.createElement('p');
+        warning.className = 'product__meta product__meta--warn';
+        warning.textContent = 'Attenzione: non va usato insieme a ' + item.warnWith.join(', ');
+        info.appendChild(warning);
+      }
+
+      card.appendChild(info);
+
+      return card;
+    }
+
+    // Disegna i prossimi 7 giorni: ogni giorno con solo le cose previste
+    function renderAgenda(week) {
+      agendaView.innerHTML = '';
+
+      // Prima volta: nessun prodotto, spieghiamo come iniziare
+      if (products.length === 0) {
+        const welcome = document.createElement('div');
+        welcome.className = 'empty-message';
+        welcome.innerHTML = `
+          <span class="material-symbols-rounded">spa</span>
+          <strong>La tua routine parte da qui</strong>
+          Aggiungi i prodotti che usi e scelgo io quando usarli. Ti avviso con una notifica all'orario giusto.
+        `;
+        agendaView.appendChild(welcome);
+        return;
+      }
+
+      for (let offset = 0; offset < 7; offset++) {
+        const date = getDateWithOffset(offset);
+        const dateKey = getDateKey(date);
+        const items = getItemsForDate(date, week);
+
+        const section = document.createElement('div');
+        section.className = 'agenda__day';
+
+        const title = document.createElement('h3');
+        title.className = 'agenda__title';
+        title.classList.toggle('agenda__title--today', offset === 0);
+        title.textContent = getDayLabel(offset, date);
+        section.appendChild(title);
+
+        if (items.length === 0) {
+          const empty = document.createElement('p');
+          empty.className = 'empty-day';
+          empty.textContent = 'Niente in programma.';
+          section.appendChild(empty);
+        } else {
+          const list = document.createElement('ul');
+          list.className = 'checklist__list';
+
+          items.forEach(function (item) {
+            list.appendChild(createAgendaCard(item, offset === 0, isItemDone(dateKey, item.id)));
+          });
+          section.appendChild(list);
+        }
+
+        agendaView.appendChild(section);
+      }
+    }
+
+    /* === DISEGNO: CALENDARIO === */
+    // Giorno scelto (numero di giorni) e primo giorno del mese mostrato
+    let calendarSelected = getTodayNumber();
+    let calendarMonthStart = getTodayNumber();
+
+    // Voci da mostrare in un giorno: nel passato quello che hai segnato, da oggi in poi quello previsto
+    function getCalendarEntries(dayNumber, week) {
+      const todayNumber = getTodayNumber();
+      const date = dayNumberToDate(dayNumber);
+      date.setTime(date.getTime() + date.getTimezoneOffset() * 60000); // stessa data nel fuso locale
+      const dateKey = getDateKey(date);
+
+      if (dayNumber < todayNumber) {
+        return (doneLog[dateKey] || []).slice().sort(sortByTime);
+      }
+      return getItemsForDate(date, week);
+    }
+
+    function renderCalendar() {
+      const week = planWeek();
+      const todayNumber = getTodayNumber();
+
+      // Primo giorno del mese mostrato (uso UTC come nel resto dei numeri-giorno)
+      const first = dayNumberToDate(calendarMonthStart);
+      const year = first.getUTCFullYear();
+      const month = first.getUTCMonth();
+      const firstNumber = Math.floor(Date.UTC(year, month, 1) / 86400000);
+      const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+      const startOffset = getWeekdayIndexFromDayNumber(firstNumber); // 0 = lunedì
+
+      calendarMonth.textContent = monthNames[month] + ' ' + year;
+      calendarGrid.innerHTML = '';
+
+      shortDayNames.forEach(function (name) {
+        const head = document.createElement('div');
+        head.className = 'calendar__dow';
+        head.textContent = name;
+        calendarGrid.appendChild(head);
+      });
+
+      for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'calendar__day calendar__day--empty';
+        calendarGrid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayNumber = firstNumber + day - 1;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'calendar__day';
+        button.dataset.day = String(dayNumber);
+        button.classList.toggle('calendar__day--today', dayNumber === todayNumber);
+        button.classList.toggle('calendar__day--selected', dayNumber === calendarSelected);
+
+        const number = document.createElement('span');
+        number.textContent = String(day);
+        const dot = document.createElement('span');
+        dot.className = 'calendar__dot';
+        if (getCalendarEntries(dayNumber, week).length === 0) {
+          dot.classList.add('calendar__dot--none');
+        }
+
+        button.appendChild(number);
+        button.appendChild(dot);
+        calendarGrid.appendChild(button);
+      }
+
+      renderCalendarDetail(week);
+    }
+
+    // Elenco in chiaro del giorno scelto
+    function renderCalendarDetail(week) {
+      const todayNumber = getTodayNumber();
+      const entries = getCalendarEntries(calendarSelected, week);
+
+      calendarDetail.innerHTML = '';
+
+      const title = document.createElement('h3');
+      title.className = 'agenda__title';
+      title.classList.toggle('agenda__title--today', calendarSelected === todayNumber);
+      title.textContent = capitalize(formatDayNumber(calendarSelected));
+      if (calendarSelected === todayNumber) { title.textContent = 'Oggi · ' + title.textContent; }
+      calendarDetail.appendChild(title);
+
+      if (entries.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-day';
+        empty.textContent = calendarSelected < todayNumber ? 'Non hai segnato nulla in questo giorno.' : 'Niente in programma.';
+        calendarDetail.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement('ul');
+      list.className = 'checklist__list';
+
+      entries.forEach(function (entry) {
+        if (calendarSelected < todayNumber) {
+          // Giorno passato: cosa hai segnato come fatto
+          const card = document.createElement('li');
+          card.className = 'product is-done';
+          card.appendChild(createIconBox(entry.icon, entry.color));
+          const info = document.createElement('div');
+          info.className = 'product__info';
+          const name = document.createElement('p');
+          name.className = 'product__name';
+          name.textContent = entry.name;
+          const meta = document.createElement('p');
+          meta.className = 'product__meta';
+          meta.textContent = entry.time + ' · ' + entry.typeName;
+          info.appendChild(name);
+          info.appendChild(meta);
+          card.appendChild(info);
+          list.appendChild(card);
+        } else {
+          // Oggi o futuro: solo da leggere (le spunte si fanno nell'Agenda)
+          const date = getDateWithOffset(calendarSelected - todayNumber);
+          list.appendChild(createAgendaCard(entry, false, isItemDone(getDateKey(date), entry.id)));
+        }
+      });
+      calendarDetail.appendChild(list);
+    }
+
+    function handleCalendarClick(event) {
+      const dayButton = event.target.closest('.calendar__day[data-day]');
+      if (dayButton === null) { return; }
+      calendarSelected = Number(dayButton.dataset.day);
+      renderCalendar();
+    }
+
+    // Cambia mese: porta il "mese mostrato" al primo del mese precedente/successivo
+    function moveCalendarMonth(step) {
+      const first = dayNumberToDate(calendarMonthStart);
+      calendarMonthStart = Math.floor(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + step, 1) / 86400000);
+      renderCalendar();
+    }
+
+    calendarGrid.addEventListener('click', handleCalendarClick);
+    document.querySelector('#calendar-prev').addEventListener('click', function () { moveCalendarMonth(-1); });
+    document.querySelector('#calendar-next').addEventListener('click', function () { moveCalendarMonth(1); });
+
+    /* === DISEGNO: STORICO === */
+    // Mostra gli ultimi 14 giorni in cui hai segnato qualcosa come fatto
+    function renderHistory() {
+      historyView.innerHTML = '';
+      let foundSomething = false;
+
+      for (let offset = 0; offset >= -13; offset--) {
+        const date = getDateWithOffset(offset);
+        const entries = doneLog[getDateKey(date)];
+
+        if (entries === undefined || entries.length === 0) {
+          continue; // niente di fatto in quel giorno
+        }
+
+        foundSomething = true;
+
+        const section = document.createElement('div');
+        section.className = 'agenda__day';
+
+        const title = document.createElement('h3');
+        title.className = 'agenda__title';
+        title.textContent = getDayLabel(offset, date);
+        section.appendChild(title);
+
+        const list = document.createElement('ul');
+        list.className = 'checklist__list';
+
+        const sorted = entries.slice().sort(sortByTime);
+        sorted.forEach(function (entry) {
+          const card = document.createElement('li');
+          card.className = 'product is-done';
+          card.appendChild(createIconBox(entry.icon, entry.color));
+
+          const info = document.createElement('div');
+          info.className = 'product__info';
+
+          const name = document.createElement('p');
+          name.className = 'product__name';
+          name.textContent = entry.name;
+
+          const meta = document.createElement('p');
+          meta.className = 'product__meta';
+          meta.textContent = entry.time + ' · ' + entry.typeName;
+
+          info.appendChild(name);
+          info.appendChild(meta);
+          card.appendChild(info);
+
+          const mark = document.createElement('span');
+          mark.className = 'material-symbols-rounded product__done-mark';
+          mark.textContent = 'check_circle';
+          card.appendChild(mark);
+
+          list.appendChild(card);
+        });
+
+        section.appendChild(list);
+        historyView.appendChild(section);
+      }
+
+      if (!foundSomething) {
+        const empty = document.createElement('div');
+        empty.className = 'empty-message';
+        empty.textContent = 'Qui vedrai quello che hai già fatto. Spunta le voci di oggi nell\'agenda per iniziare.';
+        historyView.appendChild(empty);
+      }
+    }
+
+    /* === PROGRESSO (solo oggi) === */
+    // Conta le voci di oggi già fatte e aggiorna contatore, percentuale e barre
+    function updateProgress(week) {
+      const today = new Date();
+      const items = getItemsForDate(today, week);
+      const dateKey = getDateKey(today);
+      let doneCount = 0;
+
+      items.forEach(function (item) {
+        if (isItemDone(dateKey, item.id)) {
+          doneCount = doneCount + 1;
+        }
+      });
+
+      const total = items.length;
+      let percent = 0;
+      if (total > 0) {
+        percent = Math.round((doneCount / total) * 100);
+      }
+
+      dayNameText.textContent = weekdayNames[today.getDay()] + ' ' + today.getDate() + ' ' + monthNames[today.getMonth()];
+
+      if (total === 0) {
+        counterText.textContent = 'Giornata libera';
+        percentText.textContent = '–';
+      } else {
+        counterText.textContent = doneCount + ' / ' + total + ' fatti';
+        percentText.textContent = percent + '%';
+      }
+
+      // Una barra per ogni voce, colorata se fatta
+      progressBar.innerHTML = '';
+      for (let index = 0; index < total; index++) {
+        const segment = document.createElement('span');
+        segment.className = 'progress__segment';
+        segment.classList.toggle('is-filled', index < doneCount);
+        progressBar.appendChild(segment);
+      }
+    }
+
+    /* === DISEGNO: I MIEI PRODOTTI === */
+    function renderProductList(week) {
+      myProductsList.innerHTML = '';
+
+      if (products.length === 0) {
+        const empty = document.createElement('li');
+        empty.className = 'empty-message';
+        empty.textContent = 'Nessun prodotto per ora. Premi "+ Aggiungi prodotto" per iniziare!';
+        myProductsList.appendChild(empty);
+        return;
+      }
+
+      products.forEach(function (product) {
+        const type = getType(product.type);
+
+        const item = document.createElement('li');
+        item.className = 'product';
+        item.dataset.id = product.id;
+
+        item.appendChild(createIconBox(type.icon, type.color));
+
+        const info = document.createElement('div');
+        info.className = 'product__info';
+
+        const nameInput = document.createElement('input');
+        nameInput.type = 'text';
+        nameInput.className = 'product__name name-input';
+        nameInput.maxLength = 40;
+        nameInput.value = product.name;
+        nameInput.setAttribute('aria-label', 'Nome del prodotto');
+
+        const meta = document.createElement('p');
+        meta.className = 'product__meta';
+        meta.textContent = type.name + ' · ' + describeSchedule(product, week);
+
+        info.appendChild(nameInput);
+        info.appendChild(meta);
+
+        // Orari dei promemoria (uno per momento della giornata)
+        const moments = getMoments(type);
+        if (moments.length > 0) {
+          const times = document.createElement('div');
+          times.className = 'times';
+
+          moments.forEach(function (moment) {
+            const label = document.createElement('label');
+            label.appendChild(document.createTextNode(moment === 'morning' ? 'Mattina' : 'Sera'));
+
+            const timeInput = document.createElement('input');
+            timeInput.type = 'time';
+            timeInput.className = 'time-input';
+            timeInput.value = product.times[moment];
+            timeInput.dataset.moment = moment;
+            timeInput.setAttribute('aria-label', 'Orario ' + (moment === 'morning' ? 'della mattina' : 'della sera'));
+
+            label.appendChild(timeInput);
+            times.appendChild(label);
+          });
+
+          info.appendChild(times);
+        }
+
+        // Prodotti "1 volta a settimana": scegli tu il giorno della prossima volta
+        if (getEffectiveKind(product) === 'rolling') {
+          const rolling = document.createElement('div');
+          rolling.className = 'times';
+
+          const dateLabel = document.createElement('label');
+          dateLabel.appendChild(document.createTextNode('Prossima volta'));
+
+          const dateInput = document.createElement('input');
+          dateInput.type = 'date';
+          dateInput.className = 'next-input';
+          dateInput.value = dayNumberToInputValue(getNextDue(product));
+          dateInput.min = dayNumberToInputValue(getTodayNumber());
+          dateInput.setAttribute('aria-label', 'Giorno della prossima volta');
+          dateLabel.appendChild(dateInput);
+          rolling.appendChild(dateLabel);
+
+          const doneButton = document.createElement('button');
+          doneButton.className = 'done-today-button';
+          doneButton.type = 'button';
+          if (product.lastDone === getTodayNumber()) {
+            doneButton.textContent = 'Segnato oggi';
+            doneButton.disabled = true;
+          } else {
+            doneButton.textContent = 'L\'ho fatto oggi';
+          }
+          rolling.appendChild(doneButton);
+
+          info.appendChild(rolling);
+        }
+
+        item.appendChild(info);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.setAttribute('aria-label', 'Elimina prodotto');
+        deleteButton.innerHTML = '<span class="material-symbols-rounded">delete</span>';
+        item.appendChild(deleteButton);
+
+        myProductsList.appendChild(item);
+      });
+    }
+
+    // Ridisegna tutto
+    function renderAll() {
+      const week = planWeek();
+
+      renderedDayKey = getDateKey(new Date());
+      renderAgenda(week);
+      renderHistory();
+      renderCalendar();
+      renderProductList(week);
+      updateProgress(week);
+      updateNextReminder(week);
+    }
+
+    /* === REGOLE DELL'APP === */
+    // Mette la prima lettera maiuscola ("mattina e sera" -> "Mattina e sera")
+    function capitalize(text) {
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
+    // Nome di un bisogno a partire dal suo id ("grassa" -> "Pelle grassa")
+    function getNeedLabel(needId) {
+      const found = needsOptions.find(function (need) {
+        return need.id === needId;
+      });
+      return found.label.toLowerCase();
+    }
+
+    // Crea una riga di testo dentro la scheda di un tipo
+    function createRuleLine(text, extraClass) {
+      const line = document.createElement('p');
+      line.className = 'rules__line ' + extraClass;
+      line.textContent = text;
+      return line;
+    }
+
+    // Crea la scheda di un tipo di prodotto: quando, ogni quanto e con cosa non va usato
+    function createRuleItem(type) {
+      const item = document.createElement('div');
+      item.className = 'rules__item';
+
+      const name = document.createElement('p');
+      name.className = 'rules__name';
+      name.textContent = type.name;
+      item.appendChild(name);
+
+      if (type.freq === 'asNeeded') {
+        item.appendChild(createRuleLine('Nessun promemoria: lo usi quando serve.', ''));
+        return item;
+      }
+
+      if (type.fixedDays) {
+        item.appendChild(createRuleLine(capitalize(momentText(type)) + ', 1 volta a settimana: scegli tu il giorno.', ''));
+        return item;
+      }
+
+      if (type.freq === 'daily') {
+        item.appendChild(createRuleLine(capitalize(momentText(type)) + ', ogni giorno.', ''));
+      } else {
+        if (type.perWeek === 1) {
+          item.appendChild(createRuleLine(capitalize(momentText(type)) + ', 1 volta a settimana: scegli tu il giorno.', ''));
+        } else {
+          item.appendChild(createRuleLine(capitalize(momentText(type)) + ', ' + type.perWeek + ' volte a settimana (di solito ' + dayNamesText(type.preferred) + ').', ''));
+        }
+
+        if (type.boost) {
+          const needsText = type.boost.needs.map(getNeedLabel).join(' o ');
+          item.appendChild(createRuleLine('Se hai ' + needsText + ': ' + type.boost.perWeek + ' volte (di solito ' + dayNamesText(type.boost.preferred) + ').', ''));
+        }
+      }
+
+      if (type.avoid.length > 0) {
+        const avoidNames = type.avoid.map(function (typeId) {
+          return getType(typeId).name;
+        });
+        item.appendChild(createRuleLine('Non nello stesso giorno con: ' + avoidNames.join(', ') + '.', 'rules__line--avoid'));
+      }
+
+      return item;
+    }
+
+    // Disegna l'elenco completo, diviso in gruppi, partendo dai dati dei tipi di prodotto
+    function renderRules() {
+      rulesBody.innerHTML = '';
+
+      const note = document.createElement('p');
+      note.className = 'rules__note';
+      note.textContent = 'Sono regole generali pensate per questa app, non un consiglio dermatologico. Per retinolo e acidi controlla sempre l\'etichetta del tuo prodotto. Per i prodotti da 1 volta a settimana scegli tu il primo giorno e la settimana riparte da quando li segni. Per gli altri i giorni sono quelli di partenza: se due prodotti non vanno insieme, ne sposto uno.';
+      rulesBody.appendChild(note);
+
+      const groups = [
+        { title: 'Ogni giorno', test: function (type) { return type.freq === 'daily'; } },
+        { title: '1 volta a settimana (scegli tu il giorno)', test: function (type) { return type.fixedDays !== undefined || type.perWeek === 1; } },
+        { title: '2 o più volte a settimana (scelgo io i giorni)', test: function (type) { return type.freq === 'weekly' && type.perWeek > 1; } },
+        { title: 'Quando capita', test: function (type) { return type.freq === 'asNeeded'; } }
+      ];
+
+      groups.forEach(function (group) {
+        const title = document.createElement('h3');
+        title.className = 'rules__group';
+        title.textContent = group.title;
+        rulesBody.appendChild(title);
+
+        productTypes.filter(group.test).forEach(function (type) {
+          rulesBody.appendChild(createRuleItem(type));
+        });
+      });
+    }
+
+    /* === SCHEDE AGENDA / STORICO === */
+    function handleTabClick(event) {
+      const clickedTab = event.currentTarget;
+      const view = clickedTab.dataset.view;
+
+      tabButtons.forEach(function (tab) {
+        const isActive = tab === clickedTab;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      agendaView.hidden = view !== 'agenda';
+      calendarView.hidden = view !== 'calendar';
+      historyView.hidden = view !== 'history';
+    }
+
+    tabButtons.forEach(function (tab) {
+      tab.addEventListener('click', handleTabClick);
+    });
+
+    /* === SPUNTE NELL'AGENDA (solo oggi) === */
+    // Un solo "ascoltatore" per tutta l'agenda: capisce cosa è cambiato guardando event.target
+    function handleAgendaChange(event) {
+      const target = event.target;
+
+      if (!target.classList.contains('check__input')) {
+        return;
+      }
+
+      const week = planWeek();
+      const today = new Date();
+      const item = getItemsForDate(today, week).find(function (candidate) {
+        return candidate.id === target.dataset.itemId;
+      });
+
+      if (item === undefined) {
+        return;
+      }
+
+      setItemDone(getDateKey(today), item, target.checked);
+
+      // Prodotto "1 volta a settimana": la settimana riparte da oggi, qualunque giorno fosse previsto
+      const product = getProductById(item.productId);
+      if (getEffectiveKind(product) === 'rolling') {
+        applyRollingDone(product, target.checked);
+        renderAll();
+        return;
+      }
+
+      target.closest('.product').classList.toggle('is-done', target.checked);
+
+      updateProgress(week);
+      renderHistory();
+      updateNextReminder(week);
+    }
+
+    agendaView.addEventListener('change', handleAgendaChange);
+
+    /* === I MIEI PRODOTTI: RINOMINA, ORARI, ELIMINA === */
+    function handleProductListChange(event) {
+      const target = event.target;
+      const card = target.closest('.product');
+
+      if (card === null || card.dataset.id === undefined) {
+        return;
+      }
+
+      const product = getProductById(card.dataset.id);
+
+      if (target.classList.contains('name-input')) {
+        // Nome: se lo lasci vuoto rimette quello di prima
+        const newNameValue = target.value.trim();
+
+        if (newNameValue === '') {
+          target.value = product.name;
+          return;
+        }
+
+        product.name = newNameValue;
+        saveProducts();
+        const week = planWeek();
+        renderAgenda(week);
+        updateNextReminder(week);
+      } else if (target.classList.contains('time-input')) {
+        // Orario: se lo lasci vuoto rimette quello di prima
+        const moment = target.dataset.moment;
+
+        if (target.value === '') {
+          target.value = product.times[moment];
+          return;
+        }
+
+        product.times[moment] = target.value;
+        saveProducts();
+
+        // Permette un nuovo avviso con la nuova ora
+        sentNotifications = sentNotifications.filter(function (id) {
+          return id !== product.id + '_' + moment;
+        });
+        saveSent();
+
+        const week = planWeek();
+        renderAgenda(week);
+        updateProgress(week);
+        updateNextReminder(week);
+        checkReminders();
+      } else if (target.classList.contains('next-input')) {
+        // Giorno della prossima volta: se è vuoto rimette quello di prima, se è passato usa oggi
+        if (target.value === '') {
+          target.value = dayNumberToInputValue(getNextDue(product));
+          return;
+        }
+
+        product.nextDue = Math.max(inputValueToDayNumber(target.value), getTodayNumber());
+        saveProducts();
+        renderAll();
+        checkReminders();
+      }
+    }
+
+    // "L'ho fatto oggi": segna il prodotto come fatto oggi (anche se non era previsto) e riparte da oggi
+    function markDoneToday(product) {
+      const type = getType(product.type);
+      const moment = getMoments(type)[0];
+
+      if (product.lastDone === getTodayNumber()) {
+        return; // già segnato oggi
+      }
+
+      setItemDone(getDateKey(new Date()), {
+        id: product.id + '_' + moment,
+        name: product.name,
+        type: type,
+        time: product.times[moment]
+      }, true);
+
+      applyRollingDone(product, true);
+      renderAll();
+    }
+
+    // Ripristina il pulsante elimina com'era (cestino)
+    function resetDeleteButtons() {
+      armedDeleteId = '';
+
+      myProductsList.querySelectorAll('.delete-button').forEach(function (button) {
+        button.classList.remove('is-armed');
+        button.innerHTML = '<span class="material-symbols-rounded">delete</span>';
+      });
+    }
+
+    // Elimina in due passaggi: il primo tocco chiede "Elimina?", il secondo elimina davvero
+    function handleProductListClick(event) {
+      const doneButton = event.target.closest('.done-today-button');
+      const deleteButton = event.target.closest('.delete-button');
+
+      if (doneButton !== null) {
+        markDoneToday(getProductById(doneButton.closest('.product').dataset.id));
+        return;
+      }
+
+      if (deleteButton === null) {
+        return;
+      }
+
+      const productId = deleteButton.closest('.product').dataset.id;
+
+      if (armedDeleteId === productId) {
+        // Secondo tocco: elimina il prodotto (filter crea una nuova lista senza di lui)
+        products = products.filter(function (item) {
+          return item.id !== productId;
+        });
+        saveProducts();
+        armedDeleteId = '';
+        renderAll();
+        return;
+      }
+
+      // Primo tocco: il pulsante diventa "Elimina?" per 3 secondi
+      resetDeleteButtons();
+      armedDeleteId = productId;
+      deleteButton.classList.add('is-armed');
+      deleteButton.textContent = 'Elimina?';
+
+      setTimeout(function () {
+        if (armedDeleteId === productId) {
+          resetDeleteButtons();
+        }
+      }, 3000);
+    }
+
+    myProductsList.addEventListener('change', handleProductListChange);
+    myProductsList.addEventListener('click', handleProductListClick);
+
+    /* === NUOVO PRODOTTO === */
+    // Riempie il menu dei tipi di prodotto
+    function fillTypeSelect() {
+      productTypes.forEach(function (type) {
+        const option = document.createElement('option');
+        option.value = type.id;
+        option.textContent = type.name;
+        newType.appendChild(option);
+      });
+    }
+
+    // Riempie il menu del primo giorno: oggi e i 6 giorni successivi
+    function fillFirstDaySelect() {
+      newFirst.innerHTML = '';
+
+      for (let offset = 0; offset < 7; offset++) {
+        const dayNumber = getTodayNumber() + offset;
+        const option = document.createElement('option');
+        option.value = String(dayNumber);
+
+        let text = capitalize(formatDayNumber(dayNumber));
+        if (offset === 0) { text = 'Oggi · ' + text; }
+        if (offset === 1) { text = 'Domani · ' + text; }
+
+        option.textContent = text;
+        newFirst.appendChild(option);
+      }
+    }
+
+    // Aggiorna il suggerimento e blocca la scelta della frequenza dove non serve
+    function updateNewHint() {
+      const type = getType(newType.value);
+      const lockedFreq = type.fixedDays !== undefined || type.freq === 'asNeeded';
+
+      newFreq.disabled = lockedFreq;
+      if (lockedFreq) {
+        newFreq.value = 'auto';
+      }
+
+      const preview = { type: type.id, freq: newFreq.value };
+      const isRolling = getEffectiveKind(preview) === 'rolling';
+
+      // Il primo giorno si sceglie solo per i prodotti "1 volta a settimana"
+      newFirstField.hidden = !isRolling;
+
+      let hint = describePlan(preview);
+
+      // Se nel giorno scelto c'è già un prodotto che non va usato insieme, ti avviso
+      if (isRolling) {
+        const chosenDate = getDateWithOffset(Number(newFirst.value) - getTodayNumber());
+        const conflictNames = getItemsForDate(chosenDate, planWeek())
+          .filter(function (item) {
+            return typesConflict(type, item.type);
+          })
+          .map(function (item) {
+            return item.name;
+          });
+
+        if (conflictNames.length > 0) {
+          hint = hint + ' Attenzione: quel giorno hai già ' + conflictNames.join(', ') + ', che non va usato insieme.';
+        }
+      }
+
+      newHint.textContent = hint;
+    }
+
+    function openAddDialog() {
+      addForm.reset();
+      fillFirstDaySelect();
+      updateNewHint();
+      addDialog.showModal();
+      newName.focus();
+    }
+
+    function handleAddSubmit(event) {
+      event.preventDefault(); // evita che la pagina si ricarichi
+
+      const name = newName.value.trim();
+      if (name === '') {
+        return; // niente prodotto senza nome
+      }
+
+      // Il primo giorno vale solo per i prodotti "1 volta a settimana"
+      let firstDay;
+      if (!newFirstField.hidden) {
+        firstDay = Number(newFirst.value);
+      }
+
+      products.push(createProduct(newType.value, name, newFreq.value, firstDay));
+      saveProducts();
+      renderAll();
+      checkReminders();
+      addDialog.close();
+    }
+
+    newType.addEventListener('change', updateNewHint);
+    newFreq.addEventListener('change', updateNewHint);
+    newFirst.addEventListener('change', updateNewHint);
+    addButton.addEventListener('click', openAddDialog);
+    addForm.addEventListener('submit', handleAddSubmit);
+    addCancel.addEventListener('click', function () {
+      addDialog.close();
+    });
+
+    /* === PROFILO === */
+    // Crea le caselle dei bisogni nella finestra del profilo
+    function fillNeedsList() {
+      needsOptions.forEach(function (need) {
+        const label = document.createElement('label');
+        label.className = 'need-option';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = need.id;
+
+        const text = document.createElement('span');
+        text.textContent = need.label;
+
+        label.appendChild(checkbox);
+        label.appendChild(text);
+        needsList.appendChild(label);
+      });
+    }
+
+    /* === TEMI E AVATAR === */
+    const themes = [
+      { id: 'rosa', name: 'Rosa', color: '#d4808c', meta: '#d4808c' },
+      { id: 'gotico', name: 'Gotico', color: '#b3234f', meta: '#15101a' },
+      { id: 'lavanda', name: 'Lavanda', color: '#8d73c9', meta: '#8d73c9' },
+      { id: 'menta', name: 'Menta', color: '#4f9d7f', meta: '#4f9d7f' }
+    ];
+    // Avatar disponibili. "gattino" è un disegno (SVG): gattino nero con gli occhi gialli
+    const catSvg = '<svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true">' +
+      '<circle cx="32" cy="32" r="32" fill="#6b5a7d"/>' +
+      '<path d="M13 30 L15 8 L28 18 Z M51 30 L49 8 L36 18 Z" fill="#14111a"/>' +
+      '<path d="M16 15 L17 11 L23 16 Z M48 15 L47 11 L41 16 Z" fill="#d9899b"/>' +
+      '<ellipse cx="32" cy="38" rx="21" ry="19" fill="#14111a"/>' +
+      '<ellipse cx="23.5" cy="35" rx="5" ry="5.5" fill="#f4c430"/>' +
+      '<ellipse cx="40.5" cy="35" rx="5" ry="5.5" fill="#f4c430"/>' +
+      '<ellipse cx="23.5" cy="35" rx="1.5" ry="4.5" fill="#14111a"/>' +
+      '<ellipse cx="40.5" cy="35" rx="1.5" ry="4.5" fill="#14111a"/>' +
+      '<circle cx="25" cy="33" r="1.1" fill="#ffffff"/><circle cx="42" cy="33" r="1.1" fill="#ffffff"/>' +
+      '<path d="M29.5 43 L34.5 43 L32 46 Z" fill="#d9899b"/>' +
+      '<path d="M32 46 Q29 50 26 48 M32 46 Q35 50 38 48" stroke="#a89bb5" stroke-width="1.2" fill="none" stroke-linecap="round"/>' +
+      '<path d="M18 44 L8 42 M18 47 L9 50 M46 44 L56 42 M46 47 L55 50" stroke="#a89bb5" stroke-width="1" stroke-linecap="round"/>' +
+      '</svg>';
+    const avatars = ['gattino', '🌸', '🦋', '🐰', '🌙', '🍓', '✨', '🖤'];
+
+    // Scelte fatte nella finestra, ancora da salvare
+    let draftTheme = 'rosa';
+    let draftAvatar = '';
+    let draftPhoto = '';
+
+    // Il saluto resta sempre lo stesso
+    function updateGreeting() {
+      greeting.textContent = 'salve, cucciola!';
+    }
+
+    // Applica un tema: basta cambiare l'attributo data-theme, ci pensa il CSS
+    function applyTheme(themeId) {
+      const theme = themes.find(function (item) { return item.id === themeId; }) || themes[0];
+      document.documentElement.dataset.theme = theme.id;
+      if (themeColorMeta !== null) {
+        themeColorMeta.setAttribute('content', theme.meta);
+      }
+    }
+
+    // Disegna dentro un elemento la foto, l'emoji o l'icona di default
+    function fillAvatar(element, avatar, photo) {
+      element.innerHTML = '';
+
+      if (photo !== '') {
+        const image = document.createElement('img');
+        image.src = photo;
+        image.alt = '';
+        element.appendChild(image);
+      } else if (avatar === 'gattino') {
+        element.innerHTML = catSvg;
+      } else if (avatar !== '') {
+        element.textContent = avatar;
+      } else {
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-rounded';
+        icon.textContent = 'person';
+        element.appendChild(icon);
+      }
+    }
+
+    function renderAvatar() {
+      fillAvatar(profileButton, profile.avatar, profile.photo);
+    }
+
+    function renderAvatarChoices() {
+      avatarList.innerHTML = '';
+
+      avatars.forEach(function (emoji) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'avatar-option';
+        button.dataset.avatar = emoji;
+        fillAvatar(button, emoji, '');
+        button.classList.toggle('is-selected', draftPhoto === '' && draftAvatar === emoji);
+        avatarList.appendChild(button);
+      });
+
+      if (draftPhoto !== '') {
+        const photoOption = document.createElement('button');
+        photoOption.type = 'button';
+        photoOption.className = 'avatar-option is-selected';
+        fillAvatar(photoOption, '', draftPhoto);
+        avatarList.appendChild(photoOption);
+      }
+    }
+
+    function renderThemeChoices() {
+      themeList.innerHTML = '';
+
+      themes.forEach(function (theme) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'theme-option';
+        button.dataset.theme = theme.id;
+        button.classList.toggle('is-selected', draftTheme === theme.id);
+
+        const swatch = document.createElement('span');
+        swatch.className = 'theme-option__swatch';
+        swatch.style.background = theme.color;
+
+        button.appendChild(swatch);
+        button.appendChild(document.createTextNode(theme.name));
+        themeList.appendChild(button);
+      });
+    }
+
+    function handleAvatarClick(event) {
+      const button = event.target.closest('.avatar-option');
+      if (button === null || button.dataset.avatar === undefined) { return; }
+      draftAvatar = button.dataset.avatar;
+      draftPhoto = '';
+      renderAvatarChoices();
+    }
+
+    function handleThemeClick(event) {
+      const button = event.target.closest('.theme-option');
+      if (button === null) { return; }
+      draftTheme = button.dataset.theme;
+      applyTheme(draftTheme); // anteprima subito: se annulli torna quello di prima
+      renderThemeChoices();
+    }
+
+    // Foto: la ritaglio quadrata e la rimpicciolisco, così pesa poco nella memoria del telefono
+    function handlePhotoChosen() {
+      const file = photoInput.files[0];
+      if (file === undefined) { return; }
+
+      const image = new Image();
+      const url = URL.createObjectURL(file);
+
+      image.addEventListener('load', function () {
+        const size = 160;
+        const side = Math.min(image.width, image.height);
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        canvas.getContext('2d').drawImage(
+          image,
+          (image.width - side) / 2, (image.height - side) / 2, side, side,
+          0, 0, size, size
+        );
+        draftPhoto = canvas.toDataURL('image/jpeg', 0.85);
+        URL.revokeObjectURL(url);
+        renderAvatarChoices();
+      });
+
+      image.src = url;
+      photoInput.value = '';
+    }
+
+    function openProfileDialog() {
+      draftTheme = profile.theme;
+      draftAvatar = profile.avatar;
+      draftPhoto = profile.photo;
+      renderAvatarChoices();
+      renderThemeChoices();
+
+      needsList.querySelectorAll('input').forEach(function (checkbox) {
+        checkbox.checked = profile.needs.includes(checkbox.value);
+      });
+
+      profileDialog.showModal();
+    }
+
+    function handleProfileSubmit(event) {
+      event.preventDefault();
+
+      const selectedNeeds = [];
+      needsList.querySelectorAll('input').forEach(function (checkbox) {
+        if (checkbox.checked) {
+          selectedNeeds.push(checkbox.value);
+        }
+      });
+
+      profile.needs = selectedNeeds;
+      profile.theme = draftTheme;
+      profile.avatar = draftAvatar;
+      profile.photo = draftPhoto;
+      saveProfile();
+      applyTheme(profile.theme);
+      renderAvatar();
+      renderAll(); // i bisogni cambiano quante volte a settimana si usano i prodotti
+      profileDialog.close();
+    }
+
+    function closeProfileDialog() {
+      applyTheme(profile.theme); // annulla l'anteprima del tema
+      profileDialog.close();
+    }
+
+    profileButton.addEventListener('click', openProfileDialog);
+    profileForm.addEventListener('submit', handleProfileSubmit);
+    profileCancel.addEventListener('click', closeProfileDialog);
+    profileDialog.addEventListener('cancel', function () { applyTheme(profile.theme); });
+    avatarList.addEventListener('click', handleAvatarClick);
+    themeList.addEventListener('click', handleThemeClick);
+    photoButton.addEventListener('click', function () { photoInput.click(); });
+    photoInput.addEventListener('change', handlePhotoChosen);
+    photoRemove.addEventListener('click', function () {
+      draftPhoto = '';
+      renderAvatarChoices();
+    });
+
+    /* === NOTIFICHE === */
+    // Mostra una notifica (passa dal service worker, così funziona anche su telefono)
+    function showNotification(title, body) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(function (registration) {
+          registration.showNotification(title, { body: body, icon: 'icon-192.png', badge: 'icon-192.png' });
+        });
+      } else {
+        new Notification(title, { body: body, icon: 'icon-192.png' });
+      }
+    }
+
+    // Aggiorna testo e stato del pulsante in base al permesso del browser
+    function updateNotifyButton() {
+      if (!('Notification' in window)) {
+        notifyButton.textContent = 'Notifiche non supportate';
+        notifyButton.disabled = true;
+      } else if (Notification.permission === 'granted') {
+        notifyButton.textContent = '🔔 Notifiche attive';
+        notifyButton.disabled = true;
+      } else if (Notification.permission === 'denied') {
+        notifyButton.textContent = 'Notifiche bloccate (sblocca dal lucchetto)';
+        notifyButton.disabled = true;
+      }
+    }
+
+    // Al clic chiede il permesso al browser e manda una notifica di prova
+    function handleNotifyClick() {
+      Notification.requestPermission().then(function (result) {
+        updateNotifyButton();
+        if (result === 'granted') {
+          showNotification('Bambocchan Care', 'Notifiche attivate! Ti avviserò all\'ora dei tuoi prodotti.');
+        }
+      });
+    }
+
+    notifyButton.addEventListener('click', handleNotifyClick);
+
+    // Ricorda le notifiche già inviate oggi, anche se ricarichi la pagina
+    function saveSent() {
+      writeJson('care2-sent', { day: getDateKey(new Date()), ids: sentNotifications });
+    }
+
+    function loadSent() {
+      const saved = readJson('care2-sent', { day: '', ids: [] });
+
+      if (saved.day === getDateKey(new Date())) {
+        sentNotifications = saved.ids;
+      } else {
+        sentNotifications = [];
+      }
+    }
+
+    // Controlla se è l'ora di avvisare per qualche voce di oggi non ancora fatta
+    function checkReminders() {
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        return; // senza permesso non facciamo niente
+      }
+
+      const now = new Date();
+      const minutesNow = now.getHours() * 60 + now.getMinutes();
+      const dateKey = getDateKey(now);
+
+      getItemsForDate(now, planWeek()).forEach(function (item) {
+        const minutesLate = minutesNow - timeToMinutes(item.time);
+
+        // Avvisiamo nei 2 minuti dopo l'orario (il browser a volte rallenta i timer)
+        const isTimeToNotify = minutesLate >= 0 && minutesLate <= 2;
+        const alreadySent = sentNotifications.includes(item.id);
+
+        if (isTimeToNotify && !isItemDone(dateKey, item.id) && !alreadySent) {
+          showNotification('È ora della tua routine ✨', item.name + ' (' + item.time + ')');
+          sentNotifications.push(item.id);
+          saveSent();
+        }
+      });
+    }
+
+    // Riquadro in basso: il prossimo promemoria dei prossimi giorni
+    function updateNextReminder(week) {
+      const now = new Date();
+      const minutesNow = now.getHours() * 60 + now.getMinutes();
+      let text = 'Aggiungi un prodotto per ricevere i promemoria';
+
+      if (products.length > 0) {
+        text = 'Nessun promemoria nei prossimi giorni';
+      }
+
+      for (let offset = 0; offset < 7; offset++) {
+        const date = getDateWithOffset(offset);
+        const dateKey = getDateKey(date);
+
+        const nextItem = getItemsForDate(date, week).find(function (item) {
+          if (offset === 0) {
+            // Oggi: solo le voci non ancora fatte e non ancora passate
+            return !isItemDone(dateKey, item.id) && timeToMinutes(item.time) >= minutesNow;
+          }
+          return true;
+        });
+
+        if (nextItem !== undefined) {
+          let dayText = weekdayNames[date.getDay()];
+          if (offset === 0) { dayText = 'Oggi'; }
+          if (offset === 1) { dayText = 'Domani'; }
+
+          text = dayText + ' ore ' + nextItem.time + ' - ' + nextItem.name;
+          break;
+        }
+      }
+
+      nextReminderText.textContent = text;
+    }
+
+    // Ogni 20 secondi: controlla gli orari (e cambia giorno se è passata la mezzanotte)
+    function tick() {
+      if (getDateKey(new Date()) !== renderedDayKey) {
+        loadSent();
+        renderAll();
+      }
+      checkReminders();
+      updateNextReminder(planWeek());
+    }
+
+    /* === AVVIO === */
+    // All'apertura: carica i dati salvati, prepara le finestre e disegna tutto
+    const savedProfile = readJson('care2-profile', {});
+    profile = {
+      needs: Array.isArray(savedProfile.needs) ? savedProfile.needs : [],
+      theme: savedProfile.theme || 'rosa',
+      avatar: savedProfile.avatar || '',
+      photo: savedProfile.photo || ''
+    };
+    applyTheme(profile.theme);
+    renderAvatar();
+    products = readJson('care2-products', []);
+    doneLog = readJson('care2-log', {});
+    loadSent();
+
+    fillTypeSelect();
+    fillNeedsList();
+    renderRules();
+    updateGreeting();
+    renderAll();
+    updateNotifyButton();
+    checkReminders();
+    setInterval(tick, 20000);
+
+    // Registra il service worker (serve per installare l'app e usarla offline)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
