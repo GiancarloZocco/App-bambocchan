@@ -135,6 +135,9 @@
     }
     .header__profile img { width: 100%; height: 100%; object-fit: cover; }
 
+    .account { margin: 4px 0 8px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+    .account__text { font-size: 14px; margin-bottom: 8px; }
+
     /* Scelte nel profilo: avatar e temi */
     .choice-title { font-size: 13px; font-weight: 700; color: var(--color-text-soft); margin: 4px 0; }
     .avatar-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
@@ -567,9 +570,36 @@
         <div id="needs-list"></div>
       </fieldset>
 
+      <div class="account">
+        <p class="choice-title">Account (sincronizza i dati e notifiche ad app chiusa)</p>
+        <p class="account__text" id="account-text">Non hai ancora fatto l'accesso.</p>
+        <button type="button" class="small-button" id="account-button">Accedi o crea account</button>
+      </div>
+
       <div class="dialog__buttons">
         <button type="button" class="dialog__button" id="profile-cancel">Annulla</button>
         <button type="submit" class="dialog__button dialog__button--primary">Salva</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- === FINESTRA "ACCEDI" === -->
+  <dialog class="dialog" id="auth-dialog" aria-labelledby="auth-title">
+    <form id="auth-form">
+      <h2 class="dialog__title" id="auth-title">Accedi</h2>
+      <label class="field">Email
+        <input class="field__input" type="email" id="auth-email" autocomplete="email" required>
+      </label>
+      <label class="field">Password (almeno 6 caratteri)
+        <input class="field__input" type="password" id="auth-password" autocomplete="current-password" minlength="6" required>
+      </label>
+      <p class="dialog__hint" id="auth-message"></p>
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="auth-cancel">Chiudi</button>
+        <button type="submit" class="dialog__button dialog__button--primary" id="auth-login">Accedi</button>
+      </div>
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="auth-signup">Crea account nuovo</button>
       </div>
     </form>
   </dialog>
@@ -720,9 +750,14 @@
       }
     }
 
-    function saveProducts() { writeJson('care2-products', products); }
-    function saveProfile() { writeJson('care2-profile', profile); }
-    function saveLog() { writeJson('care2-log', doneLog); }
+    // Dopo ogni salvataggio avviso il codice del cloud (se c'è un account collegato sincronizza)
+    function touchSaved() {
+      writeJson('care2-updated', Date.now());
+      window.dispatchEvent(new Event('app-saved'));
+    }
+    function saveProducts() { writeJson('care2-products', products); touchSaved(); }
+    function saveProfile() { writeJson('care2-profile', profile); touchSaved(); }
+    function saveLog() { writeJson('care2-log', doneLog); touchSaved(); }
 
     /* === DATE === */
     // Data di oggi spostata di "offset" giorni (-1 = ieri, 1 = domani). Alle 12 per evitare problemi di ora legale
@@ -2313,13 +2348,17 @@
 
     /* === NOTIFICHE === */
     // Mostra una notifica (passa dal service worker, così funziona anche su telefono)
-    function showNotification(title, body) {
+    // Il "tag" evita le notifiche doppie: stessa voce = una sola notifica
+    function showNotification(title, body, tag) {
+      const options = { body: body, icon: 'icon-192.png', badge: 'icon-192.png' };
+      if (tag !== undefined) { options.tag = tag; }
+
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(function (registration) {
-          registration.showNotification(title, { body: body, icon: 'icon-192.png', badge: 'icon-192.png' });
+          registration.showNotification(title, options);
         });
       } else {
-        new Notification(title, { body: body, icon: 'icon-192.png' });
+        new Notification(title, options);
       }
     }
 
@@ -2341,6 +2380,7 @@
     function handleNotifyClick() {
       Notification.requestPermission().then(function (result) {
         updateNotifyButton();
+        window.dispatchEvent(new Event('notify-granted'));
         if (result === 'granted') {
           showNotification('Bambocchan Care', 'Notifiche attivate! Ti avviserò all\'ora dei tuoi prodotti.');
         }
@@ -2382,7 +2422,7 @@
         const alreadySent = sentNotifications.includes(item.id);
 
         if (isTimeToNotify && !isItemDone(dateKey, item.id) && !alreadySent) {
-          showNotification('È ora della tua routine ✨', item.name + ' (' + item.time + ')');
+          showNotification('È ora della tua routine ✨', item.name + ' (' + item.time + ')', item.id + '_' + dateKey);
           sentNotifications.push(item.id);
           saveSent();
         }
@@ -2434,19 +2474,78 @@
       updateNextReminder(planWeek());
     }
 
+    // Legge profilo, prodotti e storico dalla memoria del dispositivo
+    function loadSavedData() {
+      const savedProfile = readJson('care2-profile', {});
+      profile = {
+        needs: Array.isArray(savedProfile.needs) ? savedProfile.needs : [],
+        theme: savedProfile.theme || 'rosa',
+        avatar: savedProfile.avatar || '',
+        photo: savedProfile.photo || ''
+      };
+      products = readJson('care2-products', []);
+      doneLog = readJson('care2-log', {});
+    }
+
+    /* === PONTE VERSO IL CLOUD === */
+    // Il codice Firebase (più in basso, nel secondo <script>) usa queste funzioni per leggere e scrivere i dati
+    function getCloudData() {
+      // Nel cloud tengo solo gli ultimi 60 giorni di storico
+      const recentLog = {};
+      for (let offset = 0; offset > -60; offset--) {
+        const key = getDateKey(getDateWithOffset(offset));
+        if (doneLog[key] !== undefined) { recentLog[key] = doneLog[key]; }
+      }
+      return { products: products, profile: profile, log: recentLog };
+    }
+
+    function setCloudData(data) {
+      writeJson('care2-products', data.products || []);
+      writeJson('care2-profile', data.profile || {});
+      writeJson('care2-log', data.log || {});
+      loadSavedData();
+      applyTheme(profile.theme);
+      renderAvatar();
+      renderAll();
+    }
+
+    // Promemoria dei prossimi 7 giorni (solo quelli non ancora fatti): il server li manda all'orario giusto
+    function buildReminders() {
+      const reminders = [];
+      const week = planWeek();
+      const now = Date.now();
+
+      for (let offset = 0; offset < 7; offset++) {
+        const date = getDateWithOffset(offset);
+        const dateKey = getDateKey(date);
+
+        getItemsForDate(date, week).forEach(function (item) {
+          if (isItemDone(dateKey, item.id)) { return; }
+
+          const minutes = timeToMinutes(item.time);
+          const at = new Date(date.getFullYear(), date.getMonth(), date.getDate(), Math.floor(minutes / 60), minutes % 60).getTime();
+          if (at <= now) { return; }
+
+          reminders.push({
+            at: at,
+            title: 'È ora della tua routine ✨',
+            body: item.name + ' (' + item.time + ')',
+            tag: item.id + '_' + dateKey
+          });
+        });
+      }
+
+      reminders.sort(function (a, b) { return a.at - b.at; });
+      return reminders.slice(0, 80);
+    }
+
+    window.appBridge = { getData: getCloudData, setData: setCloudData, buildReminders: buildReminders };
+
     /* === AVVIO === */
     // All'apertura: carica i dati salvati, prepara le finestre e disegna tutto
-    const savedProfile = readJson('care2-profile', {});
-    profile = {
-      needs: Array.isArray(savedProfile.needs) ? savedProfile.needs : [],
-      theme: savedProfile.theme || 'rosa',
-      avatar: savedProfile.avatar || '',
-      photo: savedProfile.photo || ''
-    };
+    loadSavedData();
     applyTheme(profile.theme);
     renderAvatar();
-    products = readJson('care2-products', []);
-    doneLog = readJson('care2-log', {});
     loadSent();
 
     fillTypeSelect();
@@ -2462,6 +2561,186 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
+  </script>
+  <!-- === CLOUD: login, sincronizzazione e notifiche ad app chiusa (Firebase) === -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut }
+      from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, arrayUnion }
+      from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+    import { getMessaging, getToken, isSupported }
+      from "https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging.js";
+
+    /* === CONFIGURAZIONE === */
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLCZ3-DeYAZ9y607XCXw3_8XcEUCbRxzw",
+      authDomain: "bambocchan-app.firebaseapp.com",
+      projectId: "bambocchan-app",
+      storageBucket: "bambocchan-app.firebasestorage.app",
+      messagingSenderId: "644308386286",
+      appId: "1:644308386286:web:255a25b937622086090eff"
+    };
+    // Chiave pubblica per le notifiche (Cloud Messaging → Configurazione web push)
+    const VAPID_KEY = "";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    /* === ELEMENTI DELLA PAGINA === */
+    const accountText = document.querySelector('#account-text');
+    const accountButton = document.querySelector('#account-button');
+    const authDialog = document.querySelector('#auth-dialog');
+    const authForm = document.querySelector('#auth-form');
+    const authEmail = document.querySelector('#auth-email');
+    const authPassword = document.querySelector('#auth-password');
+    const authMessage = document.querySelector('#auth-message');
+
+    let currentUser = null;
+    let lastSentAt = 0;       // ultimo promemoria già mandato dal server
+    let syncTimer = null;
+
+    /* === ACCESSO === */
+    function translateError(error) {
+      const code = error.code || '';
+      if (code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) {
+        return 'Email o password sbagliate.';
+      }
+      if (code.includes('email-already-in-use')) { return 'Esiste già un account con questa email: premi Accedi.'; }
+      if (code.includes('weak-password')) { return 'La password è troppo corta (almeno 6 caratteri).'; }
+      if (code.includes('invalid-email')) { return 'L\'email non è scritta bene.'; }
+      if (code.includes('too-many-requests')) { return 'Troppi tentativi: riprova tra qualche minuto.'; }
+      if (code.includes('network')) { return 'Manca la connessione internet.'; }
+      return 'Qualcosa è andato storto (' + code + ').';
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      authMessage.textContent = 'Un attimo...';
+      signInWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value)
+        .then(function () { authDialog.close(); })
+        .catch(function (error) { authMessage.textContent = translateError(error); });
+    }
+
+    function handleSignup() {
+      if (!authForm.reportValidity()) { return; }
+      authMessage.textContent = 'Un attimo...';
+      createUserWithEmailAndPassword(auth, authEmail.value.trim(), authPassword.value)
+        .then(function () { authDialog.close(); })
+        .catch(function (error) { authMessage.textContent = translateError(error); });
+    }
+
+    function handleAccountButton() {
+      if (currentUser !== null) {
+        signOut(auth);
+        return;
+      }
+      authMessage.textContent = '';
+      authDialog.showModal();
+    }
+
+    authForm.addEventListener('submit', handleLogin);
+    document.querySelector('#auth-signup').addEventListener('click', handleSignup);
+    document.querySelector('#auth-cancel').addEventListener('click', function () { authDialog.close(); });
+    accountButton.addEventListener('click', handleAccountButton);
+
+    function showAccountState() {
+      if (currentUser === null) {
+        accountText.textContent = 'Non hai ancora fatto l\'accesso.';
+        accountButton.textContent = 'Accedi o crea account';
+      } else {
+        accountText.textContent = 'Collegata come ' + currentUser.email + '. I dati si sincronizzano da soli.';
+        accountButton.textContent = 'Esci';
+      }
+    }
+
+    /* === SINCRONIZZAZIONE === */
+    function userDoc() {
+      return doc(db, 'users', currentUser.uid);
+    }
+
+    // Scrive nel cloud i dati e i promemoria dei prossimi giorni
+    function pushToCloud() {
+      if (currentUser === null) { return Promise.resolve(); }
+
+      const data = window.appBridge.getData();
+      const reminders = window.appBridge.buildReminders().filter(function (item) { return item.at > lastSentAt; });
+      const updatedAt = Number(localStorage.getItem('care2-updated')) || Date.now();
+
+      return setDoc(userDoc(), {
+        products: data.products,
+        profile: data.profile,
+        log: data.log,
+        reminders: reminders,
+        nextAt: reminders.length > 0 ? reminders[0].at : 9000000000000000,
+        updatedAt: updatedAt
+      }, { merge: true });
+    }
+
+    // Prende i dati dal cloud: se sono più recenti di quelli del dispositivo li usa
+    function pullFromCloud() {
+      if (currentUser === null) { return Promise.resolve(); }
+
+      return getDoc(userDoc()).then(function (snapshot) {
+        const localUpdated = Number(localStorage.getItem('care2-updated')) || 0;
+
+        if (snapshot.exists()) {
+          const cloud = snapshot.data();
+          lastSentAt = cloud.lastSentAt || 0;
+
+          if ((cloud.updatedAt || 0) > localUpdated) {
+            window.appBridge.setData(cloud);
+            localStorage.setItem('care2-updated', String(cloud.updatedAt));
+          }
+        }
+        return pushToCloud();
+      });
+    }
+
+    // Dopo ogni modifica aspetto 1,5 secondi e poi sincronizzo (così non scrivo a ogni tocco)
+    function scheduleSync() {
+      if (currentUser === null) { return; }
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(function () { pushToCloud().catch(function () {}); }, 1500);
+    }
+
+    window.addEventListener('app-saved', scheduleSync);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') { pullFromCloud().catch(function () {}); }
+    });
+
+    /* === NOTIFICHE AD APP CHIUSA === */
+    // Registra questo dispositivo: il server di notifiche userà il suo "token" per scrivergli
+    function registerPush() {
+      if (currentUser === null || VAPID_KEY === '' || !('Notification' in window) || Notification.permission !== 'granted') {
+        return;
+      }
+
+      isSupported().then(function (supported) {
+        if (!supported) { return; }
+
+        return navigator.serviceWorker.ready.then(function (registration) {
+          return getToken(getMessaging(app), { vapidKey: VAPID_KEY, serviceWorkerRegistration: registration });
+        }).then(function (token) {
+          if (token) {
+            return setDoc(userDoc(), { tokens: arrayUnion(token) }, { merge: true });
+          }
+        });
+      }).catch(function () {});
+    }
+
+    window.addEventListener('notify-granted', registerPush);
+
+    /* === CAMBIO DI STATO (accesso / uscita) === */
+    onAuthStateChanged(auth, function (user) {
+      currentUser = user;
+      showAccountState();
+
+      if (user !== null) {
+        pullFromCloud().then(registerPush).catch(function () {});
+      }
+    });
   </script>
 </body>
 </html>
