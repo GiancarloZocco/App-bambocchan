@@ -435,6 +435,87 @@
       font-size: 15px; font-weight: 800;
     }
     .dialog__button--primary { background: var(--color-rose); color: var(--color-on-accent); }
+    .dialog__button--danger { border-color: var(--color-danger); color: var(--color-danger); }
+    .dialog__button--danger.is-armed { background: var(--color-danger); color: var(--color-on-accent); }
+
+    /* === SEZIONI: Routine / Salute === */
+    :root { --color-water: #6fb1d8; }             /* azzurro dell'acqua */
+    :root[data-theme="gotico"] { --color-water: #5d93b8; }
+
+    .sections { display: flex; gap: 8px; margin-top: 18px; }
+    .section-tab {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 12px;
+      border-radius: var(--radius-pill);
+      background: var(--color-card);
+      box-shadow: var(--shadow-card);
+      font-size: 15px; font-weight: 800;
+      color: var(--color-text-soft);
+    }
+    .section-tab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+
+    /* Schede interne della sezione Salute (stesso aspetto delle altre schede) */
+    .htab {
+      flex: 1; padding: 10px;
+      border-radius: var(--radius-pill);
+      font-size: 14px; font-weight: 800;
+      color: var(--color-text-soft);
+    }
+    .htab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+
+    /* Frase dolce */
+    .sweet {
+      margin-top: 16px; padding: 14px 16px;
+      border-radius: var(--radius-box);
+      background: var(--color-rose-soft);
+      border: 1px solid var(--color-done-border);
+      font-size: 15px; font-weight: 700; line-height: 1.45;
+    }
+
+    /* Acqua */
+    .water { margin-top: 18px; padding: 16px; border-radius: var(--radius-card); background: var(--color-card); box-shadow: var(--shadow-card); }
+    .water__top { display: flex; align-items: center; gap: 12px; }
+    .water__icon { color: var(--color-water); }
+    .water__count { font-size: 19px; font-weight: 800; }
+    .water__sub { margin-top: 2px; font-size: 13px; color: var(--color-text-soft); }
+    .water__glasses { display: flex; gap: 5px; margin-top: 14px; }
+    .water__glass { flex: 1; height: 10px; border-radius: var(--radius-pill); background: var(--color-track); }
+    .water__glass.is-filled { background: var(--color-water); }
+    .water__buttons { display: flex; gap: 8px; margin-top: 14px; }
+    .water__button {
+      flex: 1; padding: 14px;
+      border-radius: var(--radius-pill);
+      border: 2px solid var(--color-rose);
+      color: var(--color-rose);
+      font-size: 16px; font-weight: 800;
+    }
+    .water__button--primary { flex: 3; background: var(--color-rose); color: var(--color-on-accent); }
+    .link-button { margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--color-text-soft); text-decoration: underline; }
+
+    /* Titoli di gruppo nella sezione Salute */
+    .group-title {
+      margin: 22px 0 10px;
+      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-gold);
+    }
+    .group-note { margin-top: 18px; font-size: 13px; line-height: 1.5; color: var(--color-text-soft); }
+
+    /* Giorni e orari nella finestra della terapia */
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+    .chip {
+      padding: 8px 11px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-border);
+      background: var(--color-bg);
+      font-size: 13px; font-weight: 800;
+      color: var(--color-text-soft);
+    }
+    .chip.is-selected { background: var(--color-rose); border-color: var(--color-rose); color: var(--color-on-accent); }
+    .time-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .time-row .field__input { margin-top: 0; }
+    .icon-button { display: flex; align-items: center; padding: 6px; border-radius: 10px; color: var(--color-text-soft); }
+    .small-button--spaced { margin: 8px 0 12px; }
+    .dialog__hint--short { min-height: 0; }
   </style>
 </head>
 
@@ -451,7 +532,18 @@
       <button class="header__profile" id="profile-button" aria-label="Il mio profilo"></button>
     </header>
 
+    <!-- === SEZIONI: Routine (skincare) e Salute (terapie, acqua, visite) === -->
+    <nav class="sections" aria-label="Scegli la sezione">
+      <button class="section-tab is-active" data-section="beauty" aria-pressed="true">
+        <span class="material-symbols-rounded">spa</span>Routine
+      </button>
+      <button class="section-tab" data-section="health" aria-pressed="false">
+        <span class="material-symbols-rounded">favorite</span>Salute
+      </button>
+    </nav>
+
     <main>
+      <div id="beauty-section">
       <!-- === CARD PROGRESSO: conta solo quello che è previsto oggi === -->
       <section class="progress" aria-label="Routine di oggi">
         <div class="progress__top">
@@ -503,6 +595,45 @@
         <summary class="rules__summary">Come organizzo i prodotti</summary>
         <div class="rules__body" id="rules-body"></div>
       </details>
+
+      </div>
+
+      <!-- === SEZIONE SALUTE: acqua, terapie e appuntamenti (la disegna il JavaScript) === -->
+      <div id="health-section" hidden>
+        <section class="progress" aria-label="Salute di oggi">
+          <div class="progress__top">
+            <h2 class="label">Salute di oggi</h2>
+            <span class="progress__badge" id="health-percent">–</span>
+          </div>
+          <div class="progress__middle">
+            <p class="progress__counter" id="health-counter"></p>
+            <p class="progress__day" id="health-day"></p>
+          </div>
+          <div class="progress__bar" id="health-bar"></div>
+        </section>
+
+        <p class="sweet" id="sweet-message" hidden></p>
+
+        <div class="tabs" aria-label="Scegli la vista della salute">
+          <button class="htab is-active" data-hview="today" aria-pressed="true">Oggi</button>
+          <button class="htab" data-hview="calendar" aria-pressed="false">Calendario</button>
+          <button class="htab" data-hview="manage" aria-pressed="false">Le mie cose</button>
+        </div>
+
+        <section id="health-today" aria-label="Salute di oggi"></section>
+
+        <section class="calendar" id="health-calendar" aria-label="Calendario della salute" hidden>
+          <div class="calendar__head">
+            <button class="calendar__nav" id="health-calendar-prev" type="button" aria-label="Mese precedente">‹</button>
+            <h3 class="calendar__month" id="health-calendar-month"></h3>
+            <button class="calendar__nav" id="health-calendar-next" type="button" aria-label="Mese successivo">›</button>
+          </div>
+          <div class="calendar__grid" id="health-calendar-grid"></div>
+          <div id="health-calendar-detail"></div>
+        </section>
+
+        <section id="health-manage" aria-label="Le mie terapie e i miei appuntamenti" hidden></section>
+      </div>
 
       <!-- === PULSANTE NOTIFICHE === -->
       <button class="notify-button" id="notify-button">🔔 Attiva notifiche</button>
@@ -600,6 +731,83 @@
       </div>
       <div class="dialog__buttons">
         <button type="button" class="dialog__button" id="auth-signup">Crea account nuovo</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- === FINESTRA "TERAPIA O INTEGRATORE" === -->
+  <dialog class="dialog" id="therapy-dialog" aria-labelledby="therapy-title">
+    <form id="therapy-form">
+      <h2 class="dialog__title" id="therapy-title">Nuova terapia o integratore</h2>
+
+      <label class="field">Come si chiama
+        <input class="field__input" type="text" id="therapy-name" maxlength="40" required placeholder="Es. Magnesio">
+      </label>
+
+      <label class="field">Quanto ne prendi (facoltativo)
+        <input class="field__input" type="text" id="therapy-dose" maxlength="30" placeholder="Es. 1 bustina">
+      </label>
+
+      <p class="choice-title">In quali giorni?</p>
+      <div class="chips" id="therapy-days"></div>
+
+      <p class="choice-title">A che ora? (anche più di una volta al giorno)</p>
+      <div id="therapy-times"></div>
+      <button type="button" class="small-button small-button--spaced" id="therapy-add-time">+ Aggiungi un orario</button>
+
+      <label class="field">Una nota (facoltativo)
+        <input class="field__input" type="text" id="therapy-note" maxlength="60" placeholder="Es. dopo mangiato">
+      </label>
+
+      <label class="field">Fino al (facoltativo, se è una cura a tempo)
+        <input class="field__input" type="date" id="therapy-until">
+      </label>
+
+      <p class="dialog__hint dialog__hint--short" id="therapy-hint">Scrivi quello che ti hanno indicato il medico o il farmacista.</p>
+
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="therapy-cancel">Annulla</button>
+        <button type="submit" class="dialog__button dialog__button--primary">Salva</button>
+      </div>
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button dialog__button--danger" id="therapy-delete" hidden>Elimina</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- === FINESTRA "APPUNTAMENTO" === -->
+  <dialog class="dialog" id="appointment-dialog" aria-labelledby="appointment-title">
+    <form id="appointment-form">
+      <h2 class="dialog__title" id="appointment-title">Nuovo appuntamento</h2>
+
+      <label class="field">Che appuntamento è
+        <input class="field__input" type="text" id="appointment-name" maxlength="50" required placeholder="Es. Visita reumatologo">
+      </label>
+
+      <label class="field">Giorno
+        <input class="field__input" type="date" id="appointment-date" required>
+      </label>
+
+      <label class="field">Ora
+        <input class="field__input" type="time" id="appointment-time" required>
+      </label>
+
+      <label class="field">Dove (facoltativo)
+        <input class="field__input" type="text" id="appointment-place" maxlength="60" placeholder="Es. Ospedale, 2° piano">
+      </label>
+
+      <label class="field">Una nota (facoltativo)
+        <input class="field__input" type="text" id="appointment-note" maxlength="80" placeholder="Es. portare le analisi">
+      </label>
+
+      <p class="dialog__hint dialog__hint--short" id="appointment-hint">Ti avviso la sera prima e un'ora e mezza prima.</p>
+
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button" id="appointment-cancel">Annulla</button>
+        <button type="submit" class="dialog__button dialog__button--primary">Salva</button>
+      </div>
+      <div class="dialog__buttons">
+        <button type="button" class="dialog__button dialog__button--danger" id="appointment-delete" hidden>Elimina</button>
       </div>
     </form>
   </dialog>
@@ -718,6 +926,7 @@
     let renderedDayKey = '';                    // giorno mostrato (serve a cambiare giorno a mezzanotte)
     let armedDeleteId = '';                     // prodotto che aspetta la conferma di eliminazione
     let idCounter = 0;                          // serve a creare id sempre diversi
+    let health = createEmptyHealth();           // sezione Salute: terapie, appuntamenti, acqua
 
     /* === SALVATAGGIO NEL BROWSER (localStorage) === */
     // Legge un valore salvato; se non c'è (o il browser lo blocca) restituisce quello di riserva
@@ -1724,6 +1933,7 @@
       renderCalendar();
       renderProductList(week);
       updateProgress(week);
+      renderHealth();
       updateNextReminder(week);
     }
 
@@ -2346,6 +2556,1118 @@
       renderAvatarChoices();
     });
 
+    /* ===================================================================
+       === SEZIONE SALUTE: terapie, integratori, acqua e appuntamenti ===
+       L'app NON dà consigli medici: ricorda solo quello che scrivi tu.
+       =================================================================== */
+
+    // Frasi dolci per i giorni in cui qualcosa resta indietro: le puoi cambiare o aggiungere qui
+    const sweetMessages = [
+      'Nessun problema, cucciola: si riparte da adesso. Un passettino alla volta.',
+      'Anche un solo bicchiere d\'acqua adesso conta. Ci sei, e questo basta.',
+      'Se oggi è dura, va bene lo stesso. Prenditi cura di te, ci tengo.',
+      'Ehi cucciola, ti sei ricordata di te? Io ti aspetto, senza fretta.',
+      'Bastano pochi secondi e poi puoi riposare. Ce la fai.',
+      'Ti voglio bene, e voglio che tu stia bene. Ci pensi un attimo?'
+    ];
+    const ALL_DONE_MESSAGE = 'Oggi hai fatto tutto, cucciola. Brava! 💗';
+    const QUIET_MESSAGE = 'Oggi è una giornata no, e va bene così. Ti ricordo solo le cose importanti. 💗';
+
+    const WATER_TIMES = ['10:30', '15:00', '18:30'];   // orari dei promemoria dell'acqua
+    const HEALTH_DAYS_AHEAD = 30;                      // quanti giorni di promemoria preparo in anticipo
+    const APPOINTMENT_DAYS_AHEAD = 90;                 // quanto in anticipo preparo quelli degli appuntamenti
+    const REPEAT_AFTER_MINUTES = 30;                   // se non spunti la terapia, la ricordo ancora dopo tanti minuti
+
+    // Elementi della sezione Salute
+    const beautySection = document.querySelector('#beauty-section');
+    const healthSection = document.querySelector('#health-section');
+    const sectionTabs = document.querySelectorAll('.section-tab');
+    const healthTabs = document.querySelectorAll('.htab');
+    const healthPercentText = document.querySelector('#health-percent');
+    const healthCounterText = document.querySelector('#health-counter');
+    const healthDayText = document.querySelector('#health-day');
+    const healthProgressBar = document.querySelector('#health-bar');
+    const sweetMessageBox = document.querySelector('#sweet-message');
+    const healthTodayView = document.querySelector('#health-today');
+    const healthCalendarView = document.querySelector('#health-calendar');
+    const healthManageView = document.querySelector('#health-manage');
+    const healthCalendarMonth = document.querySelector('#health-calendar-month');
+    const healthCalendarGrid = document.querySelector('#health-calendar-grid');
+    const healthCalendarDetail = document.querySelector('#health-calendar-detail');
+
+    // Finestra della terapia
+    const therapyDialog = document.querySelector('#therapy-dialog');
+    const therapyForm = document.querySelector('#therapy-form');
+    const therapyTitle = document.querySelector('#therapy-title');
+    const therapyName = document.querySelector('#therapy-name');
+    const therapyDose = document.querySelector('#therapy-dose');
+    const therapyDays = document.querySelector('#therapy-days');
+    const therapyTimes = document.querySelector('#therapy-times');
+    const therapyNote = document.querySelector('#therapy-note');
+    const therapyUntil = document.querySelector('#therapy-until');
+    const therapyHint = document.querySelector('#therapy-hint');
+    const therapyDelete = document.querySelector('#therapy-delete');
+
+    // Finestra dell'appuntamento
+    const appointmentDialog = document.querySelector('#appointment-dialog');
+    const appointmentForm = document.querySelector('#appointment-form');
+    const appointmentTitle = document.querySelector('#appointment-title');
+    const appointmentName = document.querySelector('#appointment-name');
+    const appointmentDate = document.querySelector('#appointment-date');
+    const appointmentTime = document.querySelector('#appointment-time');
+    const appointmentPlace = document.querySelector('#appointment-place');
+    const appointmentNote = document.querySelector('#appointment-note');
+    const appointmentDelete = document.querySelector('#appointment-delete');
+
+    // Stato della sezione Salute
+    let healthSelected = getTodayNumber();       // giorno scelto nel calendario
+    let healthMonthStart = getTodayNumber();     // mese mostrato nel calendario
+    let editingTherapyId = '';                   // vuoto = stai creando una terapia nuova
+    let editingAppointmentId = '';
+    let selectedDays = [];                       // giorni scelti nella finestra della terapia (0 = lunedì)
+
+    /* --- Dati e salvataggio --- */
+    function createEmptyHealth() {
+      return {
+        therapies: [],          // terapie e integratori
+        appointments: [],       // visite e appuntamenti
+        taken: {},              // cosa è stato preso, giorno per giorno
+        water: {},              // bicchieri bevuti, giorno per giorno
+        waterGoal: 8,           // bicchieri al giorno
+        waterReminders: false,  // promemoria dell'acqua (spenti finché non li accende lei)
+        quietDay: ''            // giorno in cui ha premuto "giornata no"
+      };
+    }
+
+    // Rimette in ordine i dati letti (anche da versioni vecchie o dal cloud)
+    function normalizeHealth(saved) {
+      const empty = createEmptyHealth();
+      const goal = Number(saved.waterGoal);
+
+      return {
+        therapies: Array.isArray(saved.therapies) ? saved.therapies : [],
+        appointments: Array.isArray(saved.appointments) ? saved.appointments : [],
+        taken: saved.taken !== null && typeof saved.taken === 'object' ? saved.taken : {},
+        water: saved.water !== null && typeof saved.water === 'object' ? saved.water : {},
+        waterGoal: goal >= 1 && goal <= 20 ? Math.round(goal) : empty.waterGoal,
+        waterReminders: saved.waterReminders === true,
+        quietDay: typeof saved.quietDay === 'string' ? saved.quietDay : ''
+      };
+    }
+
+    function saveHealth() {
+      writeJson('care2-health', health);
+      touchSaved();
+    }
+
+    function hasHealthData() {
+      return health.therapies.length > 0 || health.appointments.length > 0 || health.waterReminders;
+    }
+
+    /* --- Date e orari --- */
+    // Chiave di un giorno a partire dal suo numero (stesso formato di getDateKey)
+    function getDateKeyFromDayNumber(dayNumber) {
+      const date = dayNumberToDate(dayNumber);
+      return date.getUTCFullYear() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCDate();
+    }
+
+    // Momento preciso (in millisecondi) di un giorno e di un orario espresso in minuti dalla mezzanotte
+    function makeTimestamp(dayNumber, minutes) {
+      const date = dayNumberToDate(dayNumber);
+      return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), Math.floor(minutes / 60), minutes % 60).getTime();
+    }
+
+    // Da minuti a testo: 545 -> "09:05"
+    function minutesToTime(minutes) {
+      const hours = String(Math.floor(minutes / 60)).padStart(2, '0');
+      const rest = String(minutes % 60).padStart(2, '0');
+      return hours + ':' + rest;
+    }
+
+    // "Oggi", "Domani" oppure "giovedì 5 novembre"
+    function relativeDayText(dayNumber) {
+      const diff = dayNumber - getTodayNumber();
+      if (diff === 0) { return 'Oggi'; }
+      if (diff === 1) { return 'Domani'; }
+      return capitalize(formatDayNumber(dayNumber));
+    }
+
+    function sortByTimeText(a, b) {
+      return timeToMinutes(a.time) - timeToMinutes(b.time);
+    }
+
+    /* --- Terapie: cosa è previsto in un giorno --- */
+    function isTherapyActiveOn(therapy, dayNumber) {
+      if (!therapy.days.includes(getWeekdayIndexFromDayNumber(dayNumber))) {
+        return false;
+      }
+      // Cura a tempo: dopo l'ultimo giorno non è più prevista
+      return !(therapy.until > 0 && dayNumber > therapy.until);
+    }
+
+    // Una voce per ogni orario di ogni terapia prevista quel giorno
+    function getHealthItemsForDay(dayNumber) {
+      const items = [];
+
+      health.therapies.forEach(function (therapy) {
+        if (!isTherapyActiveOn(therapy, dayNumber)) {
+          return;
+        }
+        therapy.times.forEach(function (time) {
+          items.push({ key: therapy.id + '@' + time, therapy: therapy, time: time });
+        });
+      });
+
+      return items.sort(sortByTimeText);
+    }
+
+    function isDoseTaken(dateKey, key) {
+      const entries = health.taken[dateKey];
+      return entries !== undefined && entries.some(function (entry) { return entry.key === key; });
+    }
+
+    // Segna (o toglie) una terapia come presa; salvo anche nome e orario per lo storico
+    function setDoseTaken(dateKey, item, isTaken) {
+      const entries = (health.taken[dateKey] || []).filter(function (entry) {
+        return entry.key !== item.key;
+      });
+
+      if (isTaken) {
+        entries.push({ key: item.key, name: item.therapy.name, dose: item.therapy.dose || '', time: item.time });
+      }
+
+      health.taken[dateKey] = entries;
+      saveHealth();
+    }
+
+    // Testo sotto il nome: "09:00 · 1 bustina · dopo mangiato"
+    function describeDose(time, dose, note) {
+      const parts = [time];
+      if (dose) { parts.push(dose); }
+      if (note) { parts.push(note); }
+      return parts.join(' · ');
+    }
+
+    function getAppointmentsForDay(dayNumber) {
+      return health.appointments.filter(function (appointment) {
+        return appointment.day === dayNumber;
+      }).sort(sortByTimeText);
+    }
+
+    // Appuntamenti da oggi in poi, in ordine di data
+    function getUpcomingAppointments(daysAhead) {
+      const todayNumber = getTodayNumber();
+
+      return health.appointments.filter(function (appointment) {
+        return appointment.day >= todayNumber && appointment.day <= todayNumber + daysAhead;
+      }).sort(function (a, b) {
+        return a.day - b.day || sortByTimeText(a, b);
+      });
+    }
+
+    function getWaterCount(dateKey) {
+      return health.water[dateKey] || 0;
+    }
+
+    /* --- Frase dolce --- */
+    // Una terapia aggiunta oggi dopo il suo orario non conta come "dimenticata"
+    function wasAddedAfterTime(item, dayNumber) {
+      return item.therapy.createdOn === dayNumber && timeToMinutes(item.time) <= item.therapy.createdMin;
+    }
+
+    function getSweetMessage() {
+      const todayNumber = getTodayNumber();
+      const dateKey = getDateKey(new Date());
+      const items = getHealthItemsForDay(todayNumber);
+
+      if (health.quietDay === dateKey) {
+        return QUIET_MESSAGE;
+      }
+
+      const takenToday = items.filter(function (item) { return isDoseTaken(dateKey, item.key); }).length;
+      if (items.length > 0 && takenToday === items.length) {
+        return ALL_DONE_MESSAGE;
+      }
+
+      const now = new Date();
+      const minutesNow = now.getHours() * 60 + now.getMinutes();
+
+      // Qualcosa di oggi è rimasto indietro da almeno un'ora
+      const isLateToday = items.some(function (item) {
+        return !isDoseTaken(dateKey, item.key) && !wasAddedAfterTime(item, todayNumber) && timeToMinutes(item.time) + 60 <= minutesNow;
+      });
+
+      // Ieri qualcosa non è stato preso e oggi non è ancora iniziata
+      const yesterday = todayNumber - 1;
+      const yesterdayItems = getHealthItemsForDay(yesterday).filter(function (item) {
+        return item.therapy.createdOn < yesterday;
+      });
+      const yesterdayTaken = (health.taken[getDateKeyFromDayNumber(yesterday)] || []).length;
+      const missedYesterday = yesterdayItems.length > 0 && yesterdayTaken < yesterdayItems.length;
+
+      if (isLateToday || (missedYesterday && items.length > 0 && takenToday === 0)) {
+        return sweetMessages[todayNumber % sweetMessages.length];
+      }
+      return '';
+    }
+
+    /* --- Promemoria (per le notifiche) --- */
+    // Prepara i promemoria della salute dal momento "fromMs" in poi.
+    // Servono sia alle notifiche locali sia al cloud (che li manda anche ad app chiusa)
+    function collectHealthReminders(fromMs) {
+      const reminders = [];
+      const todayNumber = getTodayNumber();
+
+      for (let offset = 0; offset < HEALTH_DAYS_AHEAD; offset++) {
+        const dayNumber = todayNumber + offset;
+        const dateKey = getDateKeyFromDayNumber(dayNumber);
+
+        // Terapie: un promemoria all'ora, e uno dolce dopo se non l'hai spuntata
+        getHealthItemsForDay(dayNumber).forEach(function (item, index) {
+          if (isDoseTaken(dateKey, item.key)) { return; }
+
+          const at = makeTimestamp(dayNumber, timeToMinutes(item.time));
+          const body = item.therapy.name + (item.therapy.dose ? ' · ' + item.therapy.dose : '') + (item.therapy.note ? ' (' + item.therapy.note + ')' : '');
+          const repeatAt = at + REPEAT_AFTER_MINUTES * 60000;
+          const phrase = sweetMessages[(dayNumber + index) % sweetMessages.length];
+
+          if (at >= fromMs) {
+            reminders.push({ at: at, title: 'È ora di prenderti cura di te 💗', body: body, tag: 'h_' + item.key + '_' + dateKey, kind: 'dose', label: item.therapy.name });
+          }
+          if (repeatAt >= fromMs) {
+            reminders.push({ at: repeatAt, title: 'Ehi cucciola 💗', body: phrase + ' (' + item.therapy.name + ')', tag: 'h_' + item.key + '_' + dateKey + '_r', kind: 'repeat', label: item.therapy.name });
+          }
+        });
+
+        // Acqua: solo se i promemoria sono accesi, non nelle giornate no e non se l'obiettivo di oggi è già raggiunto
+        const isQuiet = health.quietDay === dateKey;
+        const goalReached = offset === 0 && getWaterCount(dateKey) >= health.waterGoal;
+        if (health.waterReminders && !isQuiet && !goalReached) {
+          WATER_TIMES.forEach(function (time) {
+            const at = makeTimestamp(dayNumber, timeToMinutes(time));
+            if (at >= fromMs) {
+              reminders.push({ at: at, title: 'Acqua 💧', body: 'Un bicchiere d\'acqua, cucciola?', tag: 'w_' + dateKey + '_' + time, kind: 'water', label: 'Acqua' });
+            }
+          });
+        }
+      }
+
+      // Appuntamenti: la sera prima alle 19:00 e un'ora e mezza prima
+      getUpcomingAppointments(APPOINTMENT_DAYS_AHEAD).forEach(function (appointment) {
+        const minutes = timeToMinutes(appointment.time);
+        const place = appointment.place ? ' · ' + appointment.place : '';
+        const eveAt = makeTimestamp(appointment.day - 1, 19 * 60);
+        const soonAt = makeTimestamp(appointment.day, Math.max(0, minutes - 90));
+
+        if (eveAt >= fromMs) {
+          reminders.push({ at: eveAt, title: 'Domani hai un appuntamento 📅', body: appointment.title + ' alle ' + appointment.time + place, tag: 'a_' + appointment.id + '_eve', kind: 'appointment-eve', label: appointment.title });
+        }
+        if (soonAt >= fromMs) {
+          reminders.push({ at: soonAt, title: 'Tra poco hai un appuntamento 📅', body: appointment.title + ' alle ' + appointment.time + place, tag: 'a_' + appointment.id + '_soon', kind: 'appointment', label: appointment.title });
+        }
+      });
+
+      return reminders;
+    }
+
+    /* --- Disegno: pezzi comuni --- */
+    // Card semplice con icona, titolo e riga sotto
+    function createInfoCard(icon, color, title, meta) {
+      const card = document.createElement('li');
+      card.className = 'product';
+      card.appendChild(createIconBox(icon, color));
+
+      const info = document.createElement('div');
+      info.className = 'product__info';
+
+      const name = document.createElement('p');
+      name.className = 'product__name';
+      name.textContent = title;
+
+      const metaLine = document.createElement('p');
+      metaLine.className = 'product__meta';
+      metaLine.textContent = meta;
+
+      info.appendChild(name);
+      info.appendChild(metaLine);
+      card.appendChild(info);
+      return card;
+    }
+
+    // Piccolo pulsante "matita" in fondo a una card: apre la finestra per modificare
+    function createEditButton(attributeName, id) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'icon-button';
+      button.setAttribute('aria-label', 'Modifica');
+      button.dataset[attributeName] = id;
+      button.innerHTML = '<span class="material-symbols-rounded">edit</span>';
+      return button;
+    }
+
+    function createAppointmentCard(appointment, showDay) {
+      const parts = [];
+      if (showDay) { parts.push(relativeDayText(appointment.day)); }
+      parts.push(appointment.time);
+      if (appointment.place) { parts.push(appointment.place); }
+      if (appointment.note) { parts.push(appointment.note); }
+
+      const card = createInfoCard('event', 'gold', appointment.title, parts.join(' · '));
+      card.appendChild(createEditButton('editAppointment', appointment.id));
+      return card;
+    }
+
+    // Card di una terapia da prendere oggi: con la spunta
+    function createDoseCard(item, isTaken) {
+      const card = createInfoCard('medication', 'pink', item.therapy.name, describeDose(item.time, item.therapy.dose, item.therapy.note));
+      card.classList.toggle('is-done', isTaken);
+
+      const label = document.createElement('label');
+      label.className = 'check';
+      label.innerHTML = `
+        <input type="checkbox" class="check__input" aria-label="Segna come preso">
+        <span class="check__circle"><span class="material-symbols-rounded">check</span></span>
+      `;
+      const checkbox = label.querySelector('.check__input');
+      checkbox.checked = isTaken;
+      checkbox.dataset.doseKey = item.key;
+      card.insertBefore(label, card.firstChild);
+
+      return card;
+    }
+
+    function createGroupTitle(text) {
+      const title = document.createElement('h3');
+      title.className = 'group-title';
+      title.textContent = text;
+      return title;
+    }
+
+    function createList() {
+      const list = document.createElement('ul');
+      list.className = 'checklist__list';
+      return list;
+    }
+
+    function createEmptyText(text) {
+      const empty = document.createElement('p');
+      empty.className = 'empty-day';
+      empty.textContent = text;
+      return empty;
+    }
+
+    // Acqua: contatore con bicchieri, pulsanti grandi e interruttore dei promemoria
+    function createWaterCard(dateKey) {
+      const count = getWaterCount(dateKey);
+      const goal = health.waterGoal;
+      const card = document.createElement('div');
+      card.className = 'water';
+
+      let glasses = '';
+      for (let i = 0; i < goal; i++) {
+        glasses += '<span class="water__glass' + (i < count ? ' is-filled' : '') + '"></span>';
+      }
+
+      const reminderText = health.waterReminders ? 'Promemoria acqua: attivi' : 'Promemoria acqua: spenti';
+
+      // Qui dentro ci sono solo numeri e testi fissi, quindi innerHTML è sicuro
+      card.innerHTML = `
+        <div class="water__top">
+          <div class="product__icon product__icon--pink water__icon"><span class="material-symbols-rounded">water_drop</span></div>
+          <div>
+            <p class="water__count">${count} / ${goal} bicchieri</p>
+            <p class="water__sub">Acqua di oggi</p>
+          </div>
+        </div>
+        <div class="water__glasses">${glasses}</div>
+        <div class="water__buttons">
+          <button type="button" class="water__button" data-action="water-minus" aria-label="Togli un bicchiere">−</button>
+          <button type="button" class="water__button water__button--primary" data-action="water-plus">+ 1 bicchiere</button>
+        </div>
+        <button type="button" class="link-button" data-action="water-reminders">${reminderText} (tocca per cambiare)</button>
+      `;
+      return card;
+    }
+
+    /* --- Disegno: avanzamento e frase dolce --- */
+    function updateHealthProgress() {
+      const today = new Date();
+      const dateKey = getDateKey(today);
+      const items = getHealthItemsForDay(getTodayNumber());
+      const takenCount = items.filter(function (item) { return isDoseTaken(dateKey, item.key); }).length;
+
+      healthDayText.textContent = weekdayNames[today.getDay()] + ' ' + today.getDate() + ' ' + monthNames[today.getMonth()];
+      healthProgressBar.innerHTML = '';
+
+      if (items.length === 0) {
+        healthCounterText.textContent = 'Niente da prendere oggi';
+        healthPercentText.textContent = '–';
+        return;
+      }
+
+      healthCounterText.textContent = takenCount + ' / ' + items.length + ' prese';
+      healthPercentText.textContent = Math.round((takenCount / items.length) * 100) + '%';
+
+      items.slice(0, 12).forEach(function (item, index) {
+        const segment = document.createElement('span');
+        segment.className = 'progress__segment';
+        segment.classList.toggle('is-filled', index < takenCount);
+        healthProgressBar.appendChild(segment);
+      });
+    }
+
+    function updateSweetMessage() {
+      const message = getSweetMessage();
+      sweetMessageBox.textContent = message;
+      sweetMessageBox.hidden = message === '';
+    }
+
+    /* --- Disegno: scheda "Oggi" --- */
+    function renderHealthToday() {
+      healthTodayView.innerHTML = '';
+
+      const todayNumber = getTodayNumber();
+      const dateKey = getDateKey(new Date());
+
+      healthTodayView.appendChild(createWaterCard(dateKey));
+
+      // Cosa prendere oggi
+      healthTodayView.appendChild(createGroupTitle('Da prendere oggi'));
+      const items = getHealthItemsForDay(todayNumber);
+
+      if (health.therapies.length === 0) {
+        const welcome = document.createElement('div');
+        welcome.className = 'empty-message';
+        welcome.innerHTML = `
+          <span class="material-symbols-rounded">medication</span>
+          <strong>Le tue cose da ricordare</strong>
+          Nella scheda "Le mie cose" aggiungi le terapie e gli integratori che ti hanno indicato, con giorni e orari. Ti avviso io.
+        `;
+        healthTodayView.appendChild(welcome);
+      } else if (items.length === 0) {
+        healthTodayView.appendChild(createEmptyText('Oggi non c\'è niente da prendere.'));
+      } else {
+        const list = createList();
+        items.forEach(function (item) {
+          list.appendChild(createDoseCard(item, isDoseTaken(dateKey, item.key)));
+        });
+        healthTodayView.appendChild(list);
+      }
+
+      // Prossimi appuntamenti
+      healthTodayView.appendChild(createGroupTitle('Prossimi appuntamenti'));
+      const appointments = getUpcomingAppointments(30);
+
+      if (appointments.length === 0) {
+        healthTodayView.appendChild(createEmptyText('Nessun appuntamento nei prossimi 30 giorni.'));
+      } else {
+        const list = createList();
+        appointments.forEach(function (appointment) {
+          list.appendChild(createAppointmentCard(appointment, true));
+        });
+        healthTodayView.appendChild(list);
+      }
+
+      // Giornata no
+      const quietButton = document.createElement('button');
+      quietButton.type = 'button';
+      quietButton.className = 'link-button';
+      quietButton.dataset.action = 'quiet';
+      quietButton.textContent = health.quietDay === dateKey ? 'Annulla la giornata no' : 'Oggi è una giornata no (niente promemoria dell\'acqua)';
+      healthTodayView.appendChild(quietButton);
+    }
+
+    /* --- Disegno: calendario della salute --- */
+    // Cosa mostrare in un giorno: nel passato quello che hai preso, da oggi in poi quello previsto
+    function getHealthDayInfo(dayNumber) {
+      const todayNumber = getTodayNumber();
+      const dateKey = getDateKeyFromDayNumber(dayNumber);
+      const appointments = getAppointmentsForDay(dayNumber);
+      let doses = [];
+
+      if (dayNumber < todayNumber) {
+        doses = (health.taken[dateKey] || []).slice().sort(sortByTimeText).map(function (entry) {
+          return { name: entry.name, meta: describeDose(entry.time, entry.dose, ''), taken: true };
+        });
+      } else {
+        doses = getHealthItemsForDay(dayNumber).map(function (item) {
+          return { name: item.therapy.name, meta: describeDose(item.time, item.therapy.dose, item.therapy.note), taken: isDoseTaken(dateKey, item.key) };
+        });
+      }
+
+      return { doses: doses, appointments: appointments };
+    }
+
+    function renderHealthCalendar() {
+      const todayNumber = getTodayNumber();
+      const first = dayNumberToDate(healthMonthStart);
+      const year = first.getUTCFullYear();
+      const month = first.getUTCMonth();
+      const firstNumber = Math.floor(Date.UTC(year, month, 1) / 86400000);
+      const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+      const startOffset = getWeekdayIndexFromDayNumber(firstNumber);
+
+      healthCalendarMonth.textContent = monthNames[month] + ' ' + year;
+      healthCalendarGrid.innerHTML = '';
+
+      shortDayNames.forEach(function (name) {
+        const head = document.createElement('div');
+        head.className = 'calendar__dow';
+        head.textContent = name;
+        healthCalendarGrid.appendChild(head);
+      });
+
+      for (let i = 0; i < startOffset; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'calendar__day calendar__day--empty';
+        healthCalendarGrid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dayNumber = firstNumber + day - 1;
+        const info = getHealthDayInfo(dayNumber);
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'calendar__day';
+        button.dataset.day = String(dayNumber);
+        button.classList.toggle('calendar__day--today', dayNumber === todayNumber);
+        button.classList.toggle('calendar__day--selected', dayNumber === healthSelected);
+
+        const number = document.createElement('span');
+        number.textContent = String(day);
+        const dot = document.createElement('span');
+        dot.className = 'calendar__dot';
+        if (info.doses.length === 0 && info.appointments.length === 0) {
+          dot.classList.add('calendar__dot--none');
+        }
+
+        button.appendChild(number);
+        button.appendChild(dot);
+        healthCalendarGrid.appendChild(button);
+      }
+
+      renderHealthCalendarDetail();
+    }
+
+    // Elenco in chiaro del giorno scelto
+    function renderHealthCalendarDetail() {
+      const todayNumber = getTodayNumber();
+      const info = getHealthDayInfo(healthSelected);
+      healthCalendarDetail.innerHTML = '';
+
+      const title = document.createElement('h3');
+      title.className = 'agenda__title';
+      title.classList.toggle('agenda__title--today', healthSelected === todayNumber);
+      title.textContent = (healthSelected === todayNumber ? 'Oggi · ' : '') + capitalize(formatDayNumber(healthSelected));
+      healthCalendarDetail.appendChild(title);
+
+      if (info.appointments.length === 0 && info.doses.length === 0) {
+        healthCalendarDetail.appendChild(createEmptyText(healthSelected < todayNumber ? 'Non hai segnato nulla in questo giorno.' : 'Niente in programma.'));
+      }
+
+      if (info.appointments.length > 0 || info.doses.length > 0) {
+        const list = createList();
+        info.appointments.forEach(function (appointment) {
+          list.appendChild(createAppointmentCard(appointment, false));
+        });
+        info.doses.forEach(function (dose) {
+          const card = createInfoCard('medication', 'pink', dose.name, dose.meta);
+          card.classList.toggle('is-done', dose.taken);
+          if (dose.taken) {
+            const mark = document.createElement('span');
+            mark.className = 'material-symbols-rounded product__done-mark';
+            mark.textContent = 'check_circle';
+            card.appendChild(mark);
+          }
+          list.appendChild(card);
+        });
+        healthCalendarDetail.appendChild(list);
+      }
+
+      const addButton = document.createElement('button');
+      addButton.type = 'button';
+      addButton.className = 'small-button small-button--spaced';
+      addButton.dataset.action = 'add-appointment-here';
+      addButton.textContent = '+ Appuntamento in questo giorno';
+      healthCalendarDetail.appendChild(addButton);
+    }
+
+    function moveHealthMonth(step) {
+      const first = dayNumberToDate(healthMonthStart);
+      healthMonthStart = Math.floor(Date.UTC(first.getUTCFullYear(), first.getUTCMonth() + step, 1) / 86400000);
+      renderHealthCalendar();
+    }
+
+    /* --- Disegno: scheda "Le mie cose" --- */
+    function describeDays(days) {
+      if (days.length === 7) { return 'Ogni giorno'; }
+      return days.slice().sort().map(function (index) { return shortDayNames[index]; }).join(' · ');
+    }
+
+    function createManageButton(text, action) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'add-button';
+      button.dataset.action = action;
+      button.textContent = text;
+      return button;
+    }
+
+    function renderHealthManage() {
+      healthManageView.innerHTML = '';
+
+      const note = document.createElement('p');
+      note.className = 'group-note';
+      note.textContent = 'Qui scrivi quello che ti hanno indicato il medico o il farmacista. L\'app ti ricorda gli orari, ma non dà consigli medici.';
+      healthManageView.appendChild(note);
+
+      // Terapie e integratori
+      healthManageView.appendChild(createGroupTitle('Terapie e integratori'));
+      if (health.therapies.length === 0) {
+        healthManageView.appendChild(createEmptyText('Non hai ancora aggiunto niente.'));
+      } else {
+        const list = createList();
+        health.therapies.forEach(function (therapy) {
+          let meta = describeDays(therapy.days) + ' · ' + therapy.times.join(', ');
+          if (therapy.dose) { meta = meta + ' · ' + therapy.dose; }
+          if (therapy.until > 0) { meta = meta + ' · fino al ' + formatDayNumber(therapy.until); }
+
+          const card = createInfoCard('medication', 'pink', therapy.name, meta);
+          card.appendChild(createEditButton('editTherapy', therapy.id));
+          list.appendChild(card);
+        });
+        healthManageView.appendChild(list);
+      }
+      healthManageView.appendChild(createManageButton('+ Terapia o integratore', 'add-therapy'));
+
+      // Appuntamenti
+      healthManageView.appendChild(createGroupTitle('Appuntamenti'));
+      const appointments = getUpcomingAppointments(365);
+      if (appointments.length === 0) {
+        healthManageView.appendChild(createEmptyText('Nessun appuntamento in programma.'));
+      } else {
+        const list = createList();
+        appointments.forEach(function (appointment) {
+          list.appendChild(createAppointmentCard(appointment, true));
+        });
+        healthManageView.appendChild(list);
+      }
+      healthManageView.appendChild(createManageButton('+ Appuntamento', 'add-appointment'));
+
+      // Obiettivo dell'acqua
+      healthManageView.appendChild(createGroupTitle('Acqua'));
+      const goalLabel = document.createElement('label');
+      goalLabel.className = 'field';
+      goalLabel.textContent = 'Quanti bicchieri al giorno';
+
+      const goalInput = document.createElement('input');
+      goalInput.className = 'field__input';
+      goalInput.type = 'number';
+      goalInput.min = '1';
+      goalInput.max = '20';
+      goalInput.value = String(health.waterGoal);
+      goalInput.addEventListener('change', function () {
+        const value = Math.round(Number(goalInput.value));
+        if (value >= 1 && value <= 20) {
+          health.waterGoal = value;
+          saveHealth();
+          renderHealth();
+        } else {
+          goalInput.value = String(health.waterGoal);
+        }
+      });
+
+      goalLabel.appendChild(goalInput);
+      healthManageView.appendChild(goalLabel);
+    }
+
+    /* --- Tutto insieme --- */
+    function renderHealth() {
+      updateHealthProgress();
+      updateSweetMessage();
+      renderHealthToday();
+      renderHealthCalendar();
+      renderHealthManage();
+    }
+
+    /* --- Cambio sezione e schede --- */
+    function showSection(section) {
+      sectionTabs.forEach(function (tab) {
+        const isActive = tab.dataset.section === section;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      beautySection.hidden = section !== 'beauty';
+      healthSection.hidden = section !== 'health';
+      writeJson('care2-section', section);
+    }
+
+    function handleHealthTabClick(event) {
+      const clickedTab = event.currentTarget;
+      const view = clickedTab.dataset.hview;
+
+      healthTabs.forEach(function (tab) {
+        const isActive = tab === clickedTab;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      healthTodayView.hidden = view !== 'today';
+      healthCalendarView.hidden = view !== 'calendar';
+      healthManageView.hidden = view !== 'manage';
+    }
+
+    sectionTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () { showSection(tab.dataset.section); });
+    });
+    healthTabs.forEach(function (tab) {
+      tab.addEventListener('click', handleHealthTabClick);
+    });
+
+    /* --- Azioni: acqua, giornata no, spunte --- */
+    function handleHealthTodayClick(event) {
+      const editButton = event.target.closest('[data-edit-appointment]');
+      if (editButton !== null) {
+        openAppointmentDialog(editButton.dataset.editAppointment);
+        return;
+      }
+
+      const button = event.target.closest('[data-action]');
+      if (button === null) {
+        return;
+      }
+
+      const action = button.dataset.action;
+      const dateKey = getDateKey(new Date());
+
+      if (action === 'water-plus') { health.water[dateKey] = getWaterCount(dateKey) + 1; }
+      if (action === 'water-minus') { health.water[dateKey] = Math.max(0, getWaterCount(dateKey) - 1); }
+      if (action === 'water-reminders') { health.waterReminders = !health.waterReminders; }
+      if (action === 'quiet') { health.quietDay = health.quietDay === dateKey ? '' : dateKey; }
+
+      saveHealth();
+      renderHealth();
+    }
+
+    function handleHealthTodayChange(event) {
+      const target = event.target;
+      if (!target.classList.contains('check__input')) {
+        return;
+      }
+
+      const item = getHealthItemsForDay(getTodayNumber()).find(function (candidate) {
+        return candidate.key === target.dataset.doseKey;
+      });
+      if (item === undefined) {
+        return;
+      }
+
+      setDoseTaken(getDateKey(new Date()), item, target.checked);
+      renderHealth();
+    }
+
+    function handleHealthCalendarClick(event) {
+      const dayButton = event.target.closest('.calendar__day[data-day]');
+      if (dayButton === null) {
+        return;
+      }
+      healthSelected = Number(dayButton.dataset.day);
+      renderHealthCalendar();
+    }
+
+    function handleHealthDetailClick(event) {
+      const editButton = event.target.closest('[data-edit-appointment]');
+      if (editButton !== null) {
+        openAppointmentDialog(editButton.dataset.editAppointment);
+        return;
+      }
+      if (event.target.closest('[data-action="add-appointment-here"]') !== null) {
+        openAppointmentDialog('', healthSelected);
+      }
+    }
+
+    function handleHealthManageClick(event) {
+      const editTherapy = event.target.closest('[data-edit-therapy]');
+      const editAppointment = event.target.closest('[data-edit-appointment]');
+      const actionButton = event.target.closest('[data-action]');
+
+      if (editTherapy !== null) { openTherapyDialog(editTherapy.dataset.editTherapy); return; }
+      if (editAppointment !== null) { openAppointmentDialog(editAppointment.dataset.editAppointment); return; }
+      if (actionButton === null) { return; }
+
+      if (actionButton.dataset.action === 'add-therapy') { openTherapyDialog(''); }
+      if (actionButton.dataset.action === 'add-appointment') { openAppointmentDialog(''); }
+    }
+
+    healthTodayView.addEventListener('click', handleHealthTodayClick);
+    healthTodayView.addEventListener('change', handleHealthTodayChange);
+    healthCalendarGrid.addEventListener('click', handleHealthCalendarClick);
+    healthCalendarDetail.addEventListener('click', handleHealthDetailClick);
+    healthManageView.addEventListener('click', handleHealthManageClick);
+    document.querySelector('#health-calendar-prev').addEventListener('click', function () { moveHealthMonth(-1); });
+    document.querySelector('#health-calendar-next').addEventListener('click', function () { moveHealthMonth(1); });
+
+    /* --- Finestra della terapia --- */
+    // Disegna i giorni della settimana come bottoncini da accendere e spegnere
+    function renderDayChips() {
+      therapyDays.innerHTML = '';
+
+      shortDayNames.forEach(function (name, index) {
+        const chip = document.createElement('button');
+        const isSelected = selectedDays.includes(index);
+        chip.type = 'button';
+        chip.className = 'chip';
+        chip.classList.toggle('is-selected', isSelected);
+        chip.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+        chip.dataset.day = String(index);
+        chip.textContent = name;
+        therapyDays.appendChild(chip);
+      });
+
+      const allChip = document.createElement('button');
+      allChip.type = 'button';
+      allChip.className = 'chip';
+      allChip.classList.toggle('is-selected', selectedDays.length === 7);
+      allChip.dataset.day = 'all';
+      allChip.textContent = 'Tutti';
+      therapyDays.appendChild(allChip);
+    }
+
+    function handleDayChipClick(event) {
+      const chip = event.target.closest('.chip');
+      if (chip === null) {
+        return;
+      }
+
+      if (chip.dataset.day === 'all') {
+        selectedDays = selectedDays.length === 7 ? [] : [0, 1, 2, 3, 4, 5, 6];
+      } else {
+        const index = Number(chip.dataset.day);
+        if (selectedDays.includes(index)) {
+          selectedDays = selectedDays.filter(function (day) { return day !== index; });
+        } else {
+          selectedDays.push(index);
+        }
+      }
+      renderDayChips();
+    }
+
+    // Aggiunge una riga con un orario (e il pulsante per toglierla)
+    function addTimeRow(value) {
+      const row = document.createElement('div');
+      row.className = 'time-row';
+
+      const input = document.createElement('input');
+      input.className = 'field__input';
+      input.type = 'time';
+      input.required = true;
+      input.value = value;
+
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'icon-button';
+      remove.setAttribute('aria-label', 'Togli questo orario');
+      remove.innerHTML = '<span class="material-symbols-rounded">close</span>';
+      remove.addEventListener('click', function () {
+        if (therapyTimes.children.length > 1) {
+          row.remove();
+        }
+      });
+
+      row.appendChild(input);
+      row.appendChild(remove);
+      therapyTimes.appendChild(row);
+    }
+
+    function resetDeleteButton(button) {
+      button.classList.remove('is-armed');
+      button.textContent = 'Elimina';
+    }
+
+    function openTherapyDialog(therapyId) {
+      const therapy = health.therapies.find(function (item) { return item.id === therapyId; });
+
+      therapyForm.reset();
+      therapyTimes.innerHTML = '';
+      editingTherapyId = therapy === undefined ? '' : therapy.id;
+      therapyTitle.textContent = therapy === undefined ? 'Nuova terapia o integratore' : 'Modifica';
+      therapyHint.textContent = 'Scrivi quello che ti hanno indicato il medico o il farmacista.';
+      resetDeleteButton(therapyDelete);
+      therapyDelete.hidden = therapy === undefined;
+
+      if (therapy === undefined) {
+        selectedDays = [0, 1, 2, 3, 4, 5, 6];
+        addTimeRow('09:00');
+      } else {
+        selectedDays = therapy.days.slice();
+        therapyName.value = therapy.name;
+        therapyDose.value = therapy.dose || '';
+        therapyNote.value = therapy.note || '';
+        therapyUntil.value = therapy.until > 0 ? dayNumberToInputValue(therapy.until) : '';
+        therapy.times.forEach(addTimeRow);
+      }
+
+      renderDayChips();
+      therapyDialog.showModal();
+      therapyName.focus();
+    }
+
+    function handleTherapySubmit(event) {
+      event.preventDefault();
+
+      const name = therapyName.value.trim();
+      if (name === '') {
+        return;
+      }
+      if (selectedDays.length === 0) {
+        therapyHint.textContent = 'Scegli almeno un giorno.';
+        return;
+      }
+
+      // Orari: tolgo i doppioni e li metto in ordine
+      const times = [];
+      therapyTimes.querySelectorAll('input').forEach(function (input) {
+        if (input.value !== '' && !times.includes(input.value)) {
+          times.push(input.value);
+        }
+      });
+      times.sort(function (a, b) { return timeToMinutes(a) - timeToMinutes(b); });
+      if (times.length === 0) {
+        therapyHint.textContent = 'Scegli almeno un orario.';
+        return;
+      }
+
+      const values = {
+        name: name,
+        dose: therapyDose.value.trim(),
+        note: therapyNote.value.trim(),
+        days: selectedDays.slice().sort(),
+        times: times,
+        until: therapyUntil.value === '' ? 0 : inputValueToDayNumber(therapyUntil.value)
+      };
+
+      const existing = health.therapies.find(function (item) { return item.id === editingTherapyId; });
+      if (existing !== undefined) {
+        Object.assign(existing, values);
+      } else {
+        const now = new Date();
+        idCounter = idCounter + 1;
+        health.therapies.push(Object.assign({
+          id: 't' + Date.now() + 'x' + idCounter,
+          createdOn: getDayNumber(now),
+          createdMin: now.getHours() * 60 + now.getMinutes()
+        }, values));
+      }
+
+      saveHealth();
+      renderHealth();
+      updateNextReminder(planWeek());
+      checkReminders();
+      therapyDialog.close();
+    }
+
+    // Elimina in due passaggi: il primo tocco chiede conferma
+    function handleTherapyDelete() {
+      if (!therapyDelete.classList.contains('is-armed')) {
+        therapyDelete.classList.add('is-armed');
+        therapyDelete.textContent = 'Confermi? Tocca ancora';
+        return;
+      }
+
+      health.therapies = health.therapies.filter(function (item) { return item.id !== editingTherapyId; });
+      saveHealth();
+      renderHealth();
+      updateNextReminder(planWeek());
+      therapyDialog.close();
+    }
+
+    therapyDays.addEventListener('click', handleDayChipClick);
+    therapyForm.addEventListener('submit', handleTherapySubmit);
+    therapyDelete.addEventListener('click', handleTherapyDelete);
+    document.querySelector('#therapy-add-time').addEventListener('click', function () {
+      if (therapyTimes.children.length < 6) { addTimeRow('12:00'); }
+    });
+    document.querySelector('#therapy-cancel').addEventListener('click', function () { therapyDialog.close(); });
+
+    /* --- Finestra dell'appuntamento --- */
+    // dayNumber (facoltativo) = giorno da proporre per un appuntamento nuovo
+    function openAppointmentDialog(appointmentId, dayNumber) {
+      const appointment = health.appointments.find(function (item) { return item.id === appointmentId; });
+
+      appointmentForm.reset();
+      editingAppointmentId = appointment === undefined ? '' : appointment.id;
+      appointmentTitle.textContent = appointment === undefined ? 'Nuovo appuntamento' : 'Modifica appuntamento';
+      resetDeleteButton(appointmentDelete);
+      appointmentDelete.hidden = appointment === undefined;
+
+      if (appointment === undefined) {
+        appointmentDate.value = dayNumberToInputValue(dayNumber === undefined ? getTodayNumber() : dayNumber);
+        appointmentTime.value = '09:00';
+      } else {
+        appointmentName.value = appointment.title;
+        appointmentDate.value = dayNumberToInputValue(appointment.day);
+        appointmentTime.value = appointment.time;
+        appointmentPlace.value = appointment.place || '';
+        appointmentNote.value = appointment.note || '';
+      }
+
+      appointmentDialog.showModal();
+      appointmentName.focus();
+    }
+
+    function handleAppointmentSubmit(event) {
+      event.preventDefault();
+
+      const title = appointmentName.value.trim();
+      if (title === '' || appointmentDate.value === '' || appointmentTime.value === '') {
+        return;
+      }
+
+      const values = {
+        title: title,
+        day: inputValueToDayNumber(appointmentDate.value),
+        time: appointmentTime.value,
+        place: appointmentPlace.value.trim(),
+        note: appointmentNote.value.trim()
+      };
+
+      const existing = health.appointments.find(function (item) { return item.id === editingAppointmentId; });
+      if (existing !== undefined) {
+        Object.assign(existing, values);
+      } else {
+        idCounter = idCounter + 1;
+        health.appointments.push(Object.assign({ id: 'a' + Date.now() + 'x' + idCounter }, values));
+      }
+
+      // Nel calendario mostro il giorno dell'appuntamento
+      healthSelected = values.day;
+      healthMonthStart = values.day;
+
+      saveHealth();
+      renderHealth();
+      updateNextReminder(planWeek());
+      appointmentDialog.close();
+    }
+
+    function handleAppointmentDelete() {
+      if (!appointmentDelete.classList.contains('is-armed')) {
+        appointmentDelete.classList.add('is-armed');
+        appointmentDelete.textContent = 'Confermi? Tocca ancora';
+        return;
+      }
+
+      health.appointments = health.appointments.filter(function (item) { return item.id !== editingAppointmentId; });
+      saveHealth();
+      renderHealth();
+      updateNextReminder(planWeek());
+      appointmentDialog.close();
+    }
+
+    appointmentForm.addEventListener('submit', handleAppointmentSubmit);
+    appointmentDelete.addEventListener('click', handleAppointmentDelete);
+    document.querySelector('#appointment-cancel').addEventListener('click', function () { appointmentDialog.close(); });
+
     /* === NOTIFICHE === */
     // Mostra una notifica (passa dal service worker, così funziona anche su telefono)
     // Il "tag" evita le notifiche doppie: stessa voce = una sola notifica
@@ -2427,6 +3749,17 @@
           saveSent();
         }
       });
+
+      // Salute: stessi promemoria che prepara il cloud, mostrati qui se l'app è aperta
+      const nowMs = Date.now();
+      collectHealthReminders(nowMs - 2 * 60000).forEach(function (reminder) {
+        if (reminder.at > nowMs || sentNotifications.includes(reminder.tag)) {
+          return;
+        }
+        showNotification(reminder.title, reminder.body, reminder.tag);
+        sentNotifications.push(reminder.tag);
+        saveSent();
+      });
     }
 
     // Riquadro in basso: il prossimo promemoria dei prossimi giorni
@@ -2434,8 +3767,9 @@
       const now = new Date();
       const minutesNow = now.getHours() * 60 + now.getMinutes();
       let text = 'Aggiungi un prodotto per ricevere i promemoria';
+      let bestAt = Infinity;   // quando scatta il promemoria mostrato (serve a scegliere il più vicino)
 
-      if (products.length > 0) {
+      if (products.length > 0 || hasHealthData()) {
         text = 'Nessun promemoria nei prossimi giorni';
       }
 
@@ -2457,9 +3791,26 @@
           if (offset === 1) { dayText = 'Domani'; }
 
           text = dayText + ' ore ' + nextItem.time + ' - ' + nextItem.name;
+          bestAt = makeTimestamp(getTodayNumber() + offset, timeToMinutes(nextItem.time));
           break;
         }
       }
+
+      // Salute: se una terapia o un appuntamento scatta prima, mostro quello
+      collectHealthReminders(Date.now()).forEach(function (reminder) {
+        if ((reminder.kind !== 'dose' && reminder.kind !== 'appointment') || reminder.at >= bestAt) {
+          return;
+        }
+
+        const reminderDate = new Date(reminder.at);
+        const diff = getDayNumber(reminderDate) - getTodayNumber();
+        let dayText = weekdayNames[reminderDate.getDay()];
+        if (diff === 0) { dayText = 'Oggi'; }
+        if (diff === 1) { dayText = 'Domani'; }
+
+        text = dayText + ' ore ' + minutesToTime(reminderDate.getHours() * 60 + reminderDate.getMinutes()) + ' - ' + reminder.label;
+        bestAt = reminder.at;
+      });
 
       nextReminderText.textContent = text;
     }
@@ -2472,6 +3823,7 @@
       }
       checkReminders();
       updateNextReminder(planWeek());
+      updateSweetMessage();   // col passare delle ore una terapia può risultare "indietro"
     }
 
     // Legge profilo, prodotti e storico dalla memoria del dispositivo
@@ -2485,6 +3837,7 @@
       };
       products = readJson('care2-products', []);
       doneLog = readJson('care2-log', {});
+      health = normalizeHealth(readJson('care2-health', {}));
     }
 
     /* === PONTE VERSO IL CLOUD === */
@@ -2496,13 +3849,22 @@
         const key = getDateKey(getDateWithOffset(offset));
         if (doneLog[key] !== undefined) { recentLog[key] = doneLog[key]; }
       }
-      return { products: products, profile: profile, log: recentLog };
+      // Anche per la salute teniamo nel cloud solo gli ultimi 60 giorni di acqua e di cose prese
+      const recentHealth = Object.assign({}, health, { taken: {}, water: {} });
+      for (let offset = 0; offset > -60; offset--) {
+        const key = getDateKey(getDateWithOffset(offset));
+        if (health.taken[key] !== undefined) { recentHealth.taken[key] = health.taken[key]; }
+        if (health.water[key] !== undefined) { recentHealth.water[key] = health.water[key]; }
+      }
+      return { products: products, profile: profile, log: recentLog, health: recentHealth };
     }
 
     function setCloudData(data) {
       writeJson('care2-products', data.products || []);
       writeJson('care2-profile', data.profile || {});
       writeJson('care2-log', data.log || {});
+      // I dati vecchi nel cloud non hanno la salute: in quel caso teniamo quella del dispositivo
+      if (data.health !== undefined) { writeJson('care2-health', data.health); }
       loadSavedData();
       applyTheme(profile.theme);
       renderAvatar();
@@ -2535,8 +3897,11 @@
         });
       }
 
-      reminders.sort(function (a, b) { return a.at - b.at; });
-      return reminders.slice(0, 80);
+      // Salute: terapie, acqua e appuntamenti, preparati per i prossimi 30 giorni
+      const allReminders = reminders.concat(collectHealthReminders(now));
+
+      allReminders.sort(function (a, b) { return a.at - b.at; });
+      return allReminders.slice(0, 500);
     }
 
     window.appBridge = { getData: getCloudData, setData: setCloudData, buildReminders: buildReminders };
@@ -2553,6 +3918,7 @@
     renderRules();
     updateGreeting();
     renderAll();
+    showSection(readJson('care2-section', 'beauty') === 'health' ? 'health' : 'beauty');
     updateNotifyButton();
     checkReminders();
     setInterval(tick, 20000);
@@ -2672,6 +4038,7 @@
         products: data.products,
         profile: data.profile,
         log: data.log,
+        health: data.health,
         reminders: reminders,
         nextAt: reminders.length > 0 ? reminders[0].at : 9000000000000000,
         updatedAt: updatedAt

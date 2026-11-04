@@ -95,7 +95,10 @@ async function sendNotification(accessToken, token, reminder) {
 
 /* --- Lavoro che parte ogni minuto --- */
 async function run(env) {
-  const account = JSON.parse(env.FIREBASE_SERVICE_ACCOUNT);
+  // La chiave può arrivare da un "segreto" normale (testo) o dal "Negozio dei segreti" (serve .get())
+  const secret = env.FIREBASE_SERVICE_ACCOUNT;
+  const rawKey = typeof secret === 'string' ? secret : await secret.get();
+  const account = JSON.parse(rawKey);
   const accessToken = await getAccessToken(account);
   const now = Date.now();
   const base = 'https://firestore.googleapis.com/v1/projects/' + PROJECT_ID + '/databases/(default)/documents';
