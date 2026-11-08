@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,28 +15,47 @@
   <!-- Unica risorsa esterna: font Nunito e icone Material Symbols Rounded -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+    rel="stylesheet">
 
   <style>
     /* === VARIABILI (colori, font, raggi, ombre) === */
     :root {
-      --color-page: #f3ece3;          /* sfondo fuori dall'app (schermi grandi) */
-      --color-bg: #fbf7f1;            /* sfondo dell'app */
-      --color-card: #ffffff;          /* sfondo delle card */
-      --color-text: #2a2422;          /* testo principale */
-      --color-text-soft: #6f6560;     /* testo secondario */
-      --color-rose: #d4808c;          /* rosa principale */
-      --color-rose-soft: #fdeef0;     /* rosa chiaro (sfondi) */
-      --color-gold: #d79a5b;          /* arancio/oro per le etichette */
-      --color-gold-soft: #fbf1e4;     /* oro chiaro (sfondi) */
-      --color-track: #f0e8e1;         /* barre vuote */
-      --color-border: #f3e9e4;        /* bordi leggeri */
-      --color-danger: #b4414f;        /* rosso del pulsante elimina */
-      --color-on-accent: #ffffff;     /* testo sopra i pulsanti colorati */
-      --color-done-border: #f3ccd1;   /* bordo delle card già fatte */
-      --color-check-border: #f1d9dc;  /* bordo del cerchio da spuntare */
-      --color-note-bg: #fdf4e8;       /* sfondo del promemoria */
-      --color-note-border: #f3e3cf;   /* bordo del promemoria */
+      --color-page: #f3ece3;
+      /* sfondo fuori dall'app (schermi grandi) */
+      --color-bg: #fbf7f1;
+      /* sfondo dell'app */
+      --color-card: #ffffff;
+      /* sfondo delle card */
+      --color-text: #2a2422;
+      /* testo principale */
+      --color-text-soft: #6f6560;
+      /* testo secondario */
+      --color-rose: #d4808c;
+      /* rosa principale */
+      --color-rose-soft: #fdeef0;
+      /* rosa chiaro (sfondi) */
+      --color-gold: #d79a5b;
+      /* arancio/oro per le etichette */
+      --color-gold-soft: #fbf1e4;
+      /* oro chiaro (sfondi) */
+      --color-track: #f0e8e1;
+      /* barre vuote */
+      --color-border: #f3e9e4;
+      /* bordi leggeri */
+      --color-danger: #b4414f;
+      /* rosso del pulsante elimina */
+      --color-on-accent: #ffffff;
+      /* testo sopra i pulsanti colorati */
+      --color-done-border: #f3ccd1;
+      /* bordo delle card già fatte */
+      --color-check-border: #f1d9dc;
+      /* bordo del cerchio da spuntare */
+      --color-note-bg: #fdf4e8;
+      /* sfondo del promemoria */
+      --color-note-border: #f3e3cf;
+      /* bordo del promemoria */
 
       --font-main: "Nunito", system-ui, sans-serif;
 
@@ -49,40 +69,74 @@
 
     /* === TEMI (si cambiano dal profilo: cambiano solo le variabili) === */
     :root[data-theme="gotico"] {
-      --color-page: #0b080e; --color-bg: #15101a; --color-card: #1f1826;
-      --color-text: #efe8f3; --color-text-soft: #a99bb5;
-      --color-rose: #b3234f; --color-rose-soft: #3a1522;
-      --color-gold: #b99a5b; --color-gold-soft: #2f2616;
-      --color-track: #2e2437; --color-border: #33283d; --color-danger: #e05a77;
-      --color-done-border: #5c2036; --color-check-border: #4a3a58;
-      --color-note-bg: #251c2d; --color-note-border: #3b2d47;
+      --color-page: #0b080e;
+      --color-bg: #15101a;
+      --color-card: #1f1826;
+      --color-text: #efe8f3;
+      --color-text-soft: #a99bb5;
+      --color-rose: #b3234f;
+      --color-rose-soft: #3a1522;
+      --color-gold: #b99a5b;
+      --color-gold-soft: #2f2616;
+      --color-track: #2e2437;
+      --color-border: #33283d;
+      --color-danger: #e05a77;
+      --color-done-border: #5c2036;
+      --color-check-border: #4a3a58;
+      --color-note-bg: #251c2d;
+      --color-note-border: #3b2d47;
       --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.45);
       --shadow-button: 0 6px 16px rgba(179, 35, 79, 0.4);
     }
+
     :root[data-theme="lavanda"] {
-      --color-page: #ece8f5; --color-bg: #f6f3fc; --color-card: #ffffff;
-      --color-text: #2a2438; --color-text-soft: #6c6480;
-      --color-rose: #8d73c9; --color-rose-soft: #eee8fa;
-      --color-gold: #5fa3b8; --color-gold-soft: #e6f3f7;
-      --color-track: #e8e2f3; --color-border: #e9e3f4;
-      --color-done-border: #d3c7ee; --color-check-border: #d9d0ee;
-      --color-note-bg: #eef6f9; --color-note-border: #d4e7ee;
+      --color-page: #ece8f5;
+      --color-bg: #f6f3fc;
+      --color-card: #ffffff;
+      --color-text: #2a2438;
+      --color-text-soft: #6c6480;
+      --color-rose: #8d73c9;
+      --color-rose-soft: #eee8fa;
+      --color-gold: #5fa3b8;
+      --color-gold-soft: #e6f3f7;
+      --color-track: #e8e2f3;
+      --color-border: #e9e3f4;
+      --color-done-border: #d3c7ee;
+      --color-check-border: #d9d0ee;
+      --color-note-bg: #eef6f9;
+      --color-note-border: #d4e7ee;
       --shadow-button: 0 6px 16px rgba(141, 115, 201, 0.35);
     }
+
     :root[data-theme="menta"] {
-      --color-page: #e5efe9; --color-bg: #f2f8f4; --color-card: #ffffff;
-      --color-text: #22302a; --color-text-soft: #5f7268;
-      --color-rose: #4f9d7f; --color-rose-soft: #e3f3ec;
-      --color-gold: #d99a6c; --color-gold-soft: #fbefe6;
-      --color-track: #e0ece5; --color-border: #e1eee7;
-      --color-done-border: #bfe0d1; --color-check-border: #cfe5da;
-      --color-note-bg: #fbf3ea; --color-note-border: #f0e0cf;
+      --color-page: #e5efe9;
+      --color-bg: #f2f8f4;
+      --color-card: #ffffff;
+      --color-text: #22302a;
+      --color-text-soft: #5f7268;
+      --color-rose: #4f9d7f;
+      --color-rose-soft: #e3f3ec;
+      --color-gold: #d99a6c;
+      --color-gold-soft: #fbefe6;
+      --color-track: #e0ece5;
+      --color-border: #e1eee7;
+      --color-done-border: #bfe0d1;
+      --color-check-border: #cfe5da;
+      --color-note-bg: #fbf3ea;
+      --color-note-border: #f0e0cf;
       --shadow-button: 0 6px 16px rgba(79, 157, 127, 0.35);
     }
 
     /* === BASE === */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    [hidden] { display: none !important; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
 
     body {
       font-family: var(--font-main);
@@ -90,8 +144,17 @@
       background: var(--color-page);
     }
 
-    button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
-    ul { list-style: none; }
+    button {
+      font-family: inherit;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
 
     /* Classe per le icone Material Symbols */
     .material-symbols-rounded {
@@ -121,11 +184,24 @@
       align-items: center;
       margin-top: 22px;
     }
-    .header__title { font-size: 26px; font-weight: 800; }
-    .header__subtitle { margin-top: 4px; font-size: 16px; color: var(--color-text-soft); }
+
+    .header__title {
+      font-size: 26px;
+      font-weight: 800;
+    }
+
+    .header__subtitle {
+      margin-top: 4px;
+      font-size: 16px;
+      color: var(--color-text-soft);
+    }
+
     .header__profile {
-      width: 38px; height: 38px;
-      display: flex; align-items: center; justify-content: center;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       background: var(--color-card);
       color: var(--color-rose);
@@ -133,35 +209,104 @@
       overflow: hidden;
       font-size: 22px;
     }
-    .header__profile img { width: 100%; height: 100%; object-fit: cover; }
 
-    .account { margin: 4px 0 8px; padding-top: 10px; border-top: 1px solid var(--color-border); }
-    .account__text { font-size: 14px; margin-bottom: 8px; }
+    .header__profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .account {
+      margin: 4px 0 8px;
+      padding-top: 10px;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .account__text {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
 
     /* Scelte nel profilo: avatar e temi */
-    .choice-title { font-size: 13px; font-weight: 700; color: var(--color-text-soft); margin: 4px 0; }
-    .avatar-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .choice-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-soft);
+      margin: 4px 0;
+    }
+
+    .avatar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
     .avatar-option {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: var(--color-bg); border: 2px solid var(--color-border);
-      font-size: 22px; display: flex; align-items: center; justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       overflow: hidden;
     }
-    .avatar-option img { width: 100%; height: 100%; object-fit: cover; }
-    .avatar-option.is-selected { border-color: var(--color-rose); }
-    .photo-row { display: flex; gap: 8px; margin-bottom: 14px; }
+
+    .avatar-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-option.is-selected {
+      border-color: var(--color-rose);
+    }
+
+    .photo-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
     .small-button {
-      padding: 7px 12px; border-radius: var(--radius-pill);
-      border: 1.5px solid var(--color-rose); color: var(--color-rose);
-      font-size: 13px; font-weight: 800;
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--color-rose);
+      color: var(--color-rose);
+      font-size: 13px;
+      font-weight: 800;
     }
-    .theme-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+
+    .theme-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
     .theme-option {
-      padding: 8px 4px; border-radius: 12px; border: 2px solid var(--color-border);
-      background: var(--color-bg); font-size: 12px; font-weight: 800; color: var(--color-text);
+      padding: 8px 4px;
+      border-radius: 12px;
+      border: 2px solid var(--color-border);
+      background: var(--color-bg);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--color-text);
     }
-    .theme-option__swatch { display: block; height: 16px; border-radius: 8px; margin-bottom: 6px; }
-    .theme-option.is-selected { border-color: var(--color-rose); }
+
+    .theme-option__swatch {
+      display: block;
+      height: 16px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+
+    .theme-option.is-selected {
+      border-color: var(--color-rose);
+    }
 
     /* === CARD PROGRESSO (solo oggi) === */
     .progress {
@@ -171,78 +316,227 @@
       background: var(--color-card);
       box-shadow: var(--shadow-card);
     }
-    .progress__top { display: flex; justify-content: space-between; align-items: center; }
-    .label {
-      font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--color-gold);
+
+    .progress__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+
+    .label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+    }
+
     .progress__badge {
       padding: 5px 12px;
       border-radius: var(--radius-pill);
       background: var(--color-rose-soft);
       color: var(--color-rose);
-      font-size: 13px; font-weight: 800;
+      font-size: 13px;
+      font-weight: 800;
     }
-    .progress__middle { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin-top: 14px; }
-    .progress__counter { font-size: 21px; font-weight: 800; }
-    .progress__day { font-size: 14px; color: var(--color-text-soft); text-align: right; }
-    .progress__bar { display: flex; gap: 6px; margin-top: 16px; min-height: 8px; }
-    .progress__segment { flex: 1; height: 8px; border-radius: var(--radius-pill); background: var(--color-track); }
-    .progress__segment.is-filled { background: var(--color-rose); }
+
+    .progress__middle {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .progress__counter {
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .progress__day {
+      font-size: 14px;
+      color: var(--color-text-soft);
+      text-align: right;
+    }
+
+    .progress__bar {
+      display: flex;
+      gap: 6px;
+      margin-top: 16px;
+      min-height: 8px;
+    }
+
+    .progress__segment {
+      flex: 1;
+      height: 8px;
+      border-radius: var(--radius-pill);
+      background: var(--color-track);
+    }
+
+    .progress__segment.is-filled {
+      background: var(--color-rose);
+    }
 
     /* === SCHEDE: AGENDA / STORICO === */
     .tabs {
-      display: flex; gap: 4px;
-      margin-top: 18px; padding: 4px;
+      display: flex;
+      gap: 4px;
+      margin-top: 18px;
+      padding: 4px;
       border-radius: var(--radius-pill);
       background: var(--color-card);
       box-shadow: var(--shadow-card);
     }
+
     .tab {
-      flex: 1; padding: 10px;
+      flex: 1;
+      padding: 10px;
       border-radius: var(--radius-pill);
-      font-size: 14px; font-weight: 800;
+      font-size: 14px;
+      font-weight: 800;
       color: var(--color-text-soft);
     }
+
     /* Calendario */
-    .calendar { background: var(--color-card); border-radius: var(--radius-card); box-shadow: var(--shadow-card); padding: 14px; }
-    .calendar__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-    .calendar__month { font-size: 16px; font-weight: 800; text-transform: capitalize; }
-    .calendar__nav { width: 34px; height: 34px; border-radius: 50%; background: var(--color-rose-soft); color: var(--color-rose); font-size: 20px; font-weight: 800; }
-    .calendar__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
-    .calendar__dow { font-size: 11px; font-weight: 800; color: var(--color-text-soft); padding: 4px 0; }
+    .calendar {
+      background: var(--color-card);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-card);
+      padding: 14px;
+    }
+
+    .calendar__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .calendar__month {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: capitalize;
+    }
+
+    .calendar__nav {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--color-rose-soft);
+      color: var(--color-rose);
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .calendar__grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+    }
+
+    .calendar__dow {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--color-text-soft);
+      padding: 4px 0;
+    }
+
     .calendar__day {
-      aspect-ratio: 1; border-radius: 10px; font-size: 14px; font-weight: 700;
-      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
       color: var(--color-text);
     }
-    .calendar__day--empty { visibility: hidden; }
-    .calendar__day--today { border: 1.5px solid var(--color-rose); }
-    .calendar__day--selected { background: var(--color-rose); color: var(--color-on-accent); }
-    .calendar__dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-gold); }
-    .calendar__day--selected .calendar__dot { background: #ffffff; }
-    .calendar__dot--none { visibility: hidden; }
-    #calendar-detail { margin-top: 14px; }
 
-    .tab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+    .calendar__day--empty {
+      visibility: hidden;
+    }
+
+    .calendar__day--today {
+      border: 1.5px solid var(--color-rose);
+    }
+
+    .calendar__day--selected {
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
+
+    .calendar__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-gold);
+    }
+
+    .calendar__day--selected .calendar__dot {
+      background: #ffffff;
+    }
+
+    .calendar__dot--none {
+      visibility: hidden;
+    }
+
+    #calendar-detail {
+      margin-top: 14px;
+    }
+
+    .tab.is-active {
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
 
     /* === AGENDA E STORICO === */
-    .agenda { margin-top: 6px; }
-    .agenda__day { margin-top: 18px; }
+    .agenda {
+      margin-top: 6px;
+    }
+
+    .agenda__day {
+      margin-top: 18px;
+    }
+
     .agenda__title {
       margin-bottom: 8px;
-      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--color-gold);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gold);
     }
-    .agenda__title--today { color: var(--color-rose); }
-    .empty-day { font-size: 14px; color: var(--color-text-soft); }
+
+    .agenda__title--today {
+      color: var(--color-rose);
+    }
+
+    .empty-day {
+      font-size: 14px;
+      color: var(--color-text-soft);
+    }
+
     .checklist__title {
       margin-bottom: 10px;
-      font-size: 14px; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--color-text-soft);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-soft);
     }
-    .checklist { margin-top: 26px; }
-    .checklist__list { display: flex; flex-direction: column; gap: 10px; }
+
+    .checklist {
+      margin-top: 26px;
+    }
+
+    .checklist__list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
     /* Messaggi quando non c'è ancora niente */
     .empty-message {
@@ -256,139 +550,329 @@
       border: 1px dashed var(--color-border);
       border-radius: var(--radius-card);
     }
-    .empty-message strong { display: block; margin-bottom: 6px; font-size: 17px; color: var(--color-text); }
-    .empty-message .material-symbols-rounded { display: block; margin-bottom: 8px; font-size: 32px; color: var(--color-rose); }
+
+    .empty-message strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 17px;
+      color: var(--color-text);
+    }
+
+    .empty-message .material-symbols-rounded {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 32px;
+      color: var(--color-rose);
+    }
 
     /* Singola card (voce dell'agenda, della cronologia o prodotto) */
     .product {
-      display: flex; align-items: center; gap: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       padding: 14px;
       border-radius: var(--radius-card);
       background: var(--color-card);
       border: 1px solid var(--color-border);
       box-shadow: var(--shadow-card);
     }
-    .product.is-done { border-color: var(--color-done-border); }
-    .product__info { flex: 1; min-width: 0; }  /* min-width serve per tagliare il testo lungo con "..." */
-    .product__name {
-      font-size: 16px; font-weight: 700;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+    .product.is-done {
+      border-color: var(--color-done-border);
     }
-    .product__meta { margin-top: 3px; font-size: 13px; color: var(--color-text-soft); }
+
+    .product__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* min-width serve per tagliare il testo lungo con "..." */
+    .product__name {
+      font-size: 16px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .product__meta {
+      margin-top: 3px;
+      font-size: 13px;
+      color: var(--color-text-soft);
+    }
+
     .product__icon {
-      width: 42px; height: 42px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 14px;
       font-size: 24px;
     }
-    .product__icon--pink { background: var(--color-rose-soft); color: var(--color-rose); }
-    .product__icon--gold { background: var(--color-gold-soft); color: var(--color-gold); }
-    .product__done-mark { color: var(--color-rose); font-size: 22px; }
+
+    .product__icon--pink {
+      background: var(--color-rose-soft);
+      color: var(--color-rose);
+    }
+
+    .product__icon--gold {
+      background: var(--color-gold-soft);
+      color: var(--color-gold);
+    }
+
+    .product__done-mark {
+      color: var(--color-rose);
+      font-size: 22px;
+    }
 
     /* Checkbox personalizzata: l'input vero è nascosto, si vede solo il cerchio */
-    .check { cursor: pointer; display: flex; }
-    .check__input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .check {
+      cursor: pointer;
+      display: flex;
+    }
+
+    .check__input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
     .check__circle {
-      width: 22px; height: 22px;
-      display: flex; align-items: center; justify-content: center;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       border: 2px solid var(--color-check-border);
       color: transparent;
       font-size: 16px;
       transition: background 0.15s, border-color 0.15s;
     }
-    .check__input:checked + .check__circle { background: var(--color-rose); border-color: var(--color-rose); color: var(--color-on-accent); }
-    .check__input:focus-visible + .check__circle { outline: 2px solid var(--color-rose); outline-offset: 2px; }
+
+    .check__input:checked+.check__circle {
+      background: var(--color-rose);
+      border-color: var(--color-rose);
+      color: var(--color-on-accent);
+    }
+
+    .check__input:focus-visible+.check__circle {
+      outline: 2px solid var(--color-rose);
+      outline-offset: 2px;
+    }
 
     /* Nome modificabile, orari e pulsante elimina (elenco prodotti) */
     .name-input {
-      display: block; width: 100%;
-      font-family: inherit; color: inherit;
+      display: block;
+      width: 100%;
+      font-family: inherit;
+      color: inherit;
       background: transparent;
-      border: none; border-bottom: 1px dashed transparent;
+      border: none;
+      border-bottom: 1px dashed transparent;
       padding: 0;
     }
-    .name-input:hover { border-bottom-color: var(--color-border); }
-    .name-input:focus { outline: none; border-bottom: 1px solid var(--color-rose); }
-    .times { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 8px; font-size: 12px; color: var(--color-text-soft); }
-    .times label { display: flex; align-items: center; gap: 6px; }
+
+    .name-input:hover {
+      border-bottom-color: var(--color-border);
+    }
+
+    .name-input:focus {
+      outline: none;
+      border-bottom: 1px solid var(--color-rose);
+    }
+
+    .times {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 14px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--color-text-soft);
+    }
+
+    .times label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .time-input {
-      font-family: inherit; font-size: 13px;
+      font-family: inherit;
+      font-size: 13px;
       color: var(--color-text);
       background: var(--color-rose-soft);
-      border: none; border-radius: 8px;
+      border: none;
+      border-radius: 8px;
       padding: 2px 6px;
       cursor: pointer;
     }
-    .delete-button { display: flex; align-items: center; padding: 6px; color: var(--color-text-soft); border-radius: 10px; }
-    .delete-button.is-armed { color: var(--color-on-accent); background: var(--color-danger); font-size: 13px; font-weight: 800; padding: 6px 10px; }
+
+    .delete-button {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      color: var(--color-text-soft);
+      border-radius: 10px;
+    }
+
+    .delete-button.is-armed {
+      color: var(--color-on-accent);
+      background: var(--color-danger);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 10px;
+    }
 
     /* === REGOLE DELL'APP (elenco dei tipi di prodotto) === */
-    .rules { margin-top: 22px; border-radius: var(--radius-card); background: var(--color-card); box-shadow: var(--shadow-card); }
-    .rules__summary { padding: 16px 18px; font-size: 15px; font-weight: 800; cursor: pointer; }
-    .rules__body { padding: 0 18px 18px; }
-    .rules__note { font-size: 13px; line-height: 1.5; color: var(--color-text-soft); }
+    .rules {
+      margin-top: 22px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .rules__summary {
+      padding: 16px 18px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .rules__body {
+      padding: 0 18px 18px;
+    }
+
+    .rules__note {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-text-soft);
+    }
+
     .rules__group {
       margin-top: 18px;
-      font-size: 12px; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--color-gold);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gold);
     }
-    .rules__item { padding: 10px 0; border-bottom: 1px solid var(--color-border); }
-    .rules__item:last-child { border-bottom: none; }
-    .rules__name { font-size: 15px; font-weight: 700; }
-    .rules__line { margin-top: 2px; font-size: 13px; line-height: 1.45; color: var(--color-text-soft); }
-    .rules__line--avoid { color: var(--color-danger); }
+
+    .rules__item {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .rules__item:last-child {
+      border-bottom: none;
+    }
+
+    .rules__name {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .rules__line {
+      margin-top: 2px;
+      font-size: 13px;
+      line-height: 1.45;
+      color: var(--color-text-soft);
+    }
+
+    .rules__line--avoid {
+      color: var(--color-danger);
+    }
 
     /* Prossima volta (prodotti 1 volta a settimana) e avvisi */
     .next-input {
-      font-family: inherit; font-size: 13px;
+      font-family: inherit;
+      font-size: 13px;
       color: var(--color-text);
       background: var(--color-rose-soft);
-      border: none; border-radius: 8px;
+      border: none;
+      border-radius: 8px;
       padding: 2px 6px;
       cursor: pointer;
     }
+
     .done-today-button {
       padding: 4px 10px;
       border-radius: var(--radius-pill);
       border: 1.5px solid var(--color-rose);
       color: var(--color-rose);
-      font-size: 12px; font-weight: 800;
+      font-size: 12px;
+      font-weight: 800;
     }
-    .done-today-button:disabled { opacity: 0.55; cursor: default; }
-    .product__meta--warn { color: var(--color-danger); font-weight: 700; }
+
+    .done-today-button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .product__meta--warn {
+      color: var(--color-danger);
+      font-weight: 700;
+    }
 
     /* === PULSANTI === */
     .add-button {
-      width: 100%; margin-top: 22px; padding: 18px;
+      width: 100%;
+      margin-top: 22px;
+      padding: 18px;
       border-radius: var(--radius-pill);
-      background: var(--color-rose); color: var(--color-on-accent);
-      font-size: 17px; font-weight: 800;
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+      font-size: 17px;
+      font-weight: 800;
       box-shadow: var(--shadow-button);
     }
-    .add-button:active { transform: scale(0.98); }
+
+    .add-button:active {
+      transform: scale(0.98);
+    }
+
     .notify-button {
-      width: 100%; margin-top: 12px; padding: 14px;
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
       border-radius: var(--radius-pill);
       background: var(--color-card);
       border: 2px solid var(--color-rose);
       color: var(--color-rose);
-      font-size: 15px; font-weight: 800;
+      font-size: 15px;
+      font-weight: 800;
     }
-    .notify-button:disabled { opacity: 0.6; cursor: default; }
+
+    .notify-button:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
 
     /* === PROMEMORIA === */
     .reminder {
-      display: flex; align-items: center; gap: 12px;
-      margin-top: 16px; padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 14px;
       border-radius: var(--radius-box);
       background: var(--color-note-bg);
       border: 1px solid var(--color-note-border);
-      font-size: 15px; font-weight: 600;
+      font-size: 15px;
+      font-weight: 600;
     }
+
     .reminder__icon {
-      width: 38px; height: 38px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       background: var(--color-card);
       font-size: 20px;
@@ -396,7 +880,8 @@
 
     /* === FINESTRE (nuovo prodotto e profilo) === */
     .dialog {
-      margin: auto;                       /* serve per centrarla (il reset in alto lo azzera) */
+      margin: auto;
+      /* serve per centrarla (il reset in alto lo azzera) */
       width: calc(100% - 36px);
       max-width: 380px;
       max-height: 90vh;
@@ -409,113 +894,321 @@
       font-family: inherit;
       box-shadow: 0 10px 30px rgba(42, 36, 34, 0.25);
     }
-    .dialog::backdrop { background: rgba(42, 36, 34, 0.45); }
-    .dialog__title { font-size: 20px; font-weight: 800; margin-bottom: 14px; }
-    .dialog__hint { min-height: 40px; margin-bottom: 8px; font-size: 13px; line-height: 1.4; color: var(--color-gold); font-weight: 700; }
-    .field { display: block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--color-text-soft); }
+
+    .dialog::backdrop {
+      background: rgba(42, 36, 34, 0.45);
+    }
+
+    .dialog__title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .dialog__hint {
+      min-height: 40px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--color-gold);
+      font-weight: 700;
+    }
+
+    .field {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-soft);
+    }
+
     .field__input {
-      display: block; width: 100%; margin-top: 4px; padding: 10px 12px;
-      font-family: inherit; font-size: 15px; color: var(--color-text);
+      display: block;
+      width: 100%;
+      margin-top: 4px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--color-text);
       background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: 12px;
     }
-    .field__input:focus { outline: 2px solid var(--color-rose); border-color: transparent; }
-    .field__input:disabled { opacity: 0.55; }
-    .needs { border: none; margin-bottom: 8px; }
-    .needs__title { font-size: 13px; font-weight: 700; color: var(--color-text-soft); margin-bottom: 4px; }
-    .need-option { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 15px; cursor: pointer; }
-    .need-option input { width: 18px; height: 18px; accent-color: var(--color-rose); }
-    .dialog__buttons { display: flex; gap: 10px; margin-top: 16px; }
+
+    .field__input:focus {
+      outline: 2px solid var(--color-rose);
+      border-color: transparent;
+    }
+
+    .field__input:disabled {
+      opacity: 0.55;
+    }
+
+    .needs {
+      border: none;
+      margin-bottom: 8px;
+    }
+
+    .needs__title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-soft);
+      margin-bottom: 4px;
+    }
+
+    .need-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .need-option input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-rose);
+    }
+
+    .dialog__buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
     .dialog__button {
-      flex: 1; padding: 12px;
+      flex: 1;
+      padding: 12px;
       border-radius: var(--radius-pill);
       border: 2px solid var(--color-rose);
       color: var(--color-rose);
-      font-size: 15px; font-weight: 800;
+      font-size: 15px;
+      font-weight: 800;
     }
-    .dialog__button--primary { background: var(--color-rose); color: var(--color-on-accent); }
-    .dialog__button--danger { border-color: var(--color-danger); color: var(--color-danger); }
-    .dialog__button--danger.is-armed { background: var(--color-danger); color: var(--color-on-accent); }
+
+    .dialog__button--primary {
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
+
+    .dialog__button--danger {
+      border-color: var(--color-danger);
+      color: var(--color-danger);
+    }
+
+    .dialog__button--danger.is-armed {
+      background: var(--color-danger);
+      color: var(--color-on-accent);
+    }
 
     /* === SEZIONI: Routine / Salute === */
-    :root { --color-water: #6fb1d8; }             /* azzurro dell'acqua */
-    :root[data-theme="gotico"] { --color-water: #5d93b8; }
+    :root {
+      --color-water: #6fb1d8;
+    }
 
-    .sections { display: flex; gap: 8px; margin-top: 18px; }
+    /* azzurro dell'acqua */
+    :root[data-theme="gotico"] {
+      --color-water: #5d93b8;
+    }
+
+    .sections {
+      display: flex;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
     .section-tab {
-      flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       padding: 12px;
       border-radius: var(--radius-pill);
       background: var(--color-card);
       box-shadow: var(--shadow-card);
-      font-size: 15px; font-weight: 800;
+      font-size: 15px;
+      font-weight: 800;
       color: var(--color-text-soft);
     }
-    .section-tab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+
+    .section-tab.is-active {
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
 
     /* Schede interne della sezione Salute (stesso aspetto delle altre schede) */
     .htab {
-      flex: 1; padding: 10px;
+      flex: 1;
+      padding: 10px;
       border-radius: var(--radius-pill);
-      font-size: 14px; font-weight: 800;
+      font-size: 14px;
+      font-weight: 800;
       color: var(--color-text-soft);
     }
-    .htab.is-active { background: var(--color-rose); color: var(--color-on-accent); }
+
+    .htab.is-active {
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
 
     /* Frase dolce */
     .sweet {
-      margin-top: 16px; padding: 14px 16px;
+      margin-top: 16px;
+      padding: 14px 16px;
       border-radius: var(--radius-box);
       background: var(--color-rose-soft);
       border: 1px solid var(--color-done-border);
-      font-size: 15px; font-weight: 700; line-height: 1.45;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.45;
     }
 
     /* Acqua */
-    .water { margin-top: 18px; padding: 16px; border-radius: var(--radius-card); background: var(--color-card); box-shadow: var(--shadow-card); }
-    .water__top { display: flex; align-items: center; gap: 12px; }
-    .water__icon { color: var(--color-water); }
-    .water__count { font-size: 19px; font-weight: 800; }
-    .water__sub { margin-top: 2px; font-size: 13px; color: var(--color-text-soft); }
-    .water__glasses { display: flex; gap: 5px; margin-top: 14px; }
-    .water__glass { flex: 1; height: 10px; border-radius: var(--radius-pill); background: var(--color-track); }
-    .water__glass.is-filled { background: var(--color-water); }
-    .water__buttons { display: flex; gap: 8px; margin-top: 14px; }
+    .water {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: var(--radius-card);
+      background: var(--color-card);
+      box-shadow: var(--shadow-card);
+    }
+
+    .water__top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .water__icon {
+      color: var(--color-water);
+    }
+
+    .water__count {
+      font-size: 19px;
+      font-weight: 800;
+    }
+
+    .water__sub {
+      margin-top: 2px;
+      font-size: 13px;
+      color: var(--color-text-soft);
+    }
+
+    .water__glasses {
+      display: flex;
+      gap: 5px;
+      margin-top: 14px;
+    }
+
+    .water__glass {
+      flex: 1;
+      height: 10px;
+      border-radius: var(--radius-pill);
+      background: var(--color-track);
+    }
+
+    .water__glass.is-filled {
+      background: var(--color-water);
+    }
+
+    .water__buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
     .water__button {
-      flex: 1; padding: 14px;
+      flex: 1;
+      padding: 14px;
       border-radius: var(--radius-pill);
       border: 2px solid var(--color-rose);
       color: var(--color-rose);
-      font-size: 16px; font-weight: 800;
+      font-size: 16px;
+      font-weight: 800;
     }
-    .water__button--primary { flex: 3; background: var(--color-rose); color: var(--color-on-accent); }
-    .link-button { margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--color-text-soft); text-decoration: underline; }
+
+    .water__button--primary {
+      flex: 3;
+      background: var(--color-rose);
+      color: var(--color-on-accent);
+    }
+
+    .link-button {
+      margin-top: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-text-soft);
+      text-decoration: underline;
+    }
 
     /* Titoli di gruppo nella sezione Salute */
     .group-title {
       margin: 22px 0 10px;
-      font-size: 13px; font-weight: 800; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--color-gold);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-gold);
     }
-    .group-note { margin-top: 18px; font-size: 13px; line-height: 1.5; color: var(--color-text-soft); }
+
+    .group-note {
+      margin-top: 18px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--color-text-soft);
+    }
 
     /* Giorni e orari nella finestra della terapia */
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 12px; }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 12px;
+    }
+
     .chip {
       padding: 8px 11px;
       border-radius: var(--radius-pill);
       border: 1.5px solid var(--color-border);
       background: var(--color-bg);
-      font-size: 13px; font-weight: 800;
+      font-size: 13px;
+      font-weight: 800;
       color: var(--color-text-soft);
     }
-    .chip.is-selected { background: var(--color-rose); border-color: var(--color-rose); color: var(--color-on-accent); }
-    .time-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-    .time-row .field__input { margin-top: 0; }
-    .icon-button { display: flex; align-items: center; padding: 6px; border-radius: 10px; color: var(--color-text-soft); }
-    .small-button--spaced { margin: 8px 0 12px; }
-    .dialog__hint--short { min-height: 0; }
+
+    .chip.is-selected {
+      background: var(--color-rose);
+      border-color: var(--color-rose);
+      color: var(--color-on-accent);
+    }
+
+    .time-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .time-row .field__input {
+      margin-top: 0;
+    }
+
+    .icon-button {
+      display: flex;
+      align-items: center;
+      padding: 6px;
+      border-radius: 10px;
+      color: var(--color-text-soft);
+    }
+
+    .small-button--spaced {
+      margin: 8px 0 12px;
+    }
+
+    .dialog__hint--short {
+      min-height: 0;
+    }
   </style>
 </head>
 
@@ -544,57 +1237,57 @@
 
     <main>
       <div id="beauty-section">
-      <!-- === CARD PROGRESSO: conta solo quello che è previsto oggi === -->
-      <section class="progress" aria-label="Routine di oggi">
-        <div class="progress__top">
-          <h2 class="label">Routine di oggi</h2>
-          <span class="progress__badge" id="percent-text">0%</span>
+        <!-- === CARD PROGRESSO: conta solo quello che è previsto oggi === -->
+        <section class="progress" aria-label="Routine di oggi">
+          <div class="progress__top">
+            <h2 class="label">Routine di oggi</h2>
+            <span class="progress__badge" id="percent-text">0%</span>
+          </div>
+          <div class="progress__middle">
+            <p class="progress__counter" id="counter-text">0 / 0 fatti</p>
+            <p class="progress__day" id="day-name"></p>
+          </div>
+          <div class="progress__bar" id="progress-bar"></div>
+        </section>
+
+        <!-- === SCHEDE: Agenda (prossimi giorni) e Storico (cosa hai già fatto) === -->
+        <div class="tabs" aria-label="Scegli la vista">
+          <button class="tab is-active" id="tab-agenda" data-view="agenda" aria-pressed="true">Agenda</button>
+          <button class="tab" id="tab-calendar" data-view="calendar" aria-pressed="false">Calendario</button>
+          <button class="tab" id="tab-history" data-view="history" aria-pressed="false">Storico</button>
         </div>
-        <div class="progress__middle">
-          <p class="progress__counter" id="counter-text">0 / 0 fatti</p>
-          <p class="progress__day" id="day-name"></p>
-        </div>
-        <div class="progress__bar" id="progress-bar"></div>
-      </section>
 
-      <!-- === SCHEDE: Agenda (prossimi giorni) e Storico (cosa hai già fatto) === -->
-      <div class="tabs" aria-label="Scegli la vista">
-        <button class="tab is-active" id="tab-agenda" data-view="agenda" aria-pressed="true">Agenda</button>
-        <button class="tab" id="tab-calendar" data-view="calendar" aria-pressed="false">Calendario</button>
-        <button class="tab" id="tab-history" data-view="history" aria-pressed="false">Storico</button>
-      </div>
+        <!-- === AGENDA: i prossimi 7 giorni, con solo i prodotti previsti (la crea il JavaScript) === -->
+        <section class="agenda" id="agenda-view" aria-label="Agenda dei prossimi giorni"></section>
 
-      <!-- === AGENDA: i prossimi 7 giorni, con solo i prodotti previsti (la crea il JavaScript) === -->
-      <section class="agenda" id="agenda-view" aria-label="Agenda dei prossimi giorni"></section>
+        <!-- === CALENDARIO: scegli un giorno e vedi cosa è previsto (lo crea il JavaScript) === -->
+        <section class="calendar" id="calendar-view" aria-label="Calendario" hidden>
+          <div class="calendar__head">
+            <button class="calendar__nav" id="calendar-prev" type="button" aria-label="Mese precedente">‹</button>
+            <h3 class="calendar__month" id="calendar-month"></h3>
+            <button class="calendar__nav" id="calendar-next" type="button" aria-label="Mese successivo">›</button>
+          </div>
+          <div class="calendar__grid" id="calendar-grid"></div>
+          <div id="calendar-detail"></div>
+        </section>
 
-      <!-- === CALENDARIO: scegli un giorno e vedi cosa è previsto (lo crea il JavaScript) === -->
-      <section class="calendar" id="calendar-view" aria-label="Calendario" hidden>
-        <div class="calendar__head">
-          <button class="calendar__nav" id="calendar-prev" type="button" aria-label="Mese precedente">‹</button>
-          <h3 class="calendar__month" id="calendar-month"></h3>
-          <button class="calendar__nav" id="calendar-next" type="button" aria-label="Mese successivo">›</button>
-        </div>
-        <div class="calendar__grid" id="calendar-grid"></div>
-        <div id="calendar-detail"></div>
-      </section>
+        <!-- === STORICO: quello che hai già segnato come fatto (lo crea il JavaScript) === -->
+        <section class="agenda" id="history-view" aria-label="Storico" hidden></section>
 
-      <!-- === STORICO: quello che hai già segnato come fatto (lo crea il JavaScript) === -->
-      <section class="agenda" id="history-view" aria-label="Storico" hidden></section>
+        <!-- === PULSANTE AGGIUNGI PRODOTTO === -->
+        <button class="add-button" id="add-button">+ Aggiungi prodotto</button>
 
-      <!-- === PULSANTE AGGIUNGI PRODOTTO === -->
-      <button class="add-button" id="add-button">+ Aggiungi prodotto</button>
+        <!-- === I MIEI PRODOTTI: nome, orari e pulsante elimina === -->
+        <section class="checklist" aria-label="I miei prodotti">
+          <h2 class="checklist__title">I miei prodotti</h2>
+          <ul class="checklist__list" id="my-products-list"></ul>
+        </section>
 
-      <!-- === I MIEI PRODOTTI: nome, orari e pulsante elimina === -->
-      <section class="checklist" aria-label="I miei prodotti">
-        <h2 class="checklist__title">I miei prodotti</h2>
-        <ul class="checklist__list" id="my-products-list"></ul>
-      </section>
-
-      <!-- === REGOLE: come l'app organizza ogni tipo di prodotto (le crea il JavaScript) === -->
-      <details class="rules">
-        <summary class="rules__summary">Come organizzo i prodotti</summary>
-        <div class="rules__body" id="rules-body"></div>
-      </details>
+        <!-- === REGOLE: come l'app organizza ogni tipo di prodotto (le crea il JavaScript) === -->
+        <details class="rules">
+          <summary class="rules__summary">Come organizzo i prodotti</summary>
+          <div class="rules__body" id="rules-body"></div>
+        </details>
 
       </div>
 
@@ -624,9 +1317,11 @@
 
         <section class="calendar" id="health-calendar" aria-label="Calendario della salute" hidden>
           <div class="calendar__head">
-            <button class="calendar__nav" id="health-calendar-prev" type="button" aria-label="Mese precedente">‹</button>
+            <button class="calendar__nav" id="health-calendar-prev" type="button"
+              aria-label="Mese precedente">‹</button>
             <h3 class="calendar__month" id="health-calendar-month"></h3>
-            <button class="calendar__nav" id="health-calendar-next" type="button" aria-label="Mese successivo">›</button>
+            <button class="calendar__nav" id="health-calendar-next" type="button"
+              aria-label="Mese successivo">›</button>
           </div>
           <div class="calendar__grid" id="health-calendar-grid"></div>
           <div id="health-calendar-detail"></div>
@@ -652,7 +1347,8 @@
       <h2 class="dialog__title" id="add-title">Nuovo prodotto</h2>
 
       <label class="field">Nome del prodotto
-        <input class="field__input" type="text" id="new-name" maxlength="40" required placeholder="Es. Tonico alla rosa">
+        <input class="field__input" type="text" id="new-name" maxlength="40" required
+          placeholder="Es. Tonico alla rosa">
       </label>
 
       <label class="field">Che tipo di prodotto è?
@@ -722,7 +1418,8 @@
         <input class="field__input" type="email" id="auth-email" autocomplete="email" required>
       </label>
       <label class="field">Password (almeno 6 caratteri)
-        <input class="field__input" type="password" id="auth-password" autocomplete="current-password" minlength="6" required>
+        <input class="field__input" type="password" id="auth-password" autocomplete="current-password" minlength="6"
+          required>
       </label>
       <p class="dialog__hint" id="auth-message"></p>
       <div class="dialog__buttons">
@@ -753,7 +1450,8 @@
 
       <p class="choice-title">A che ora? (anche più di una volta al giorno)</p>
       <div id="therapy-times"></div>
-      <button type="button" class="small-button small-button--spaced" id="therapy-add-time">+ Aggiungi un orario</button>
+      <button type="button" class="small-button small-button--spaced" id="therapy-add-time">+ Aggiungi un
+        orario</button>
 
       <label class="field">Una nota (facoltativo)
         <input class="field__input" type="text" id="therapy-note" maxlength="60" placeholder="Es. dopo mangiato">
@@ -763,7 +1461,8 @@
         <input class="field__input" type="date" id="therapy-until">
       </label>
 
-      <p class="dialog__hint dialog__hint--short" id="therapy-hint">Scrivi quello che ti hanno indicato il medico o il farmacista.</p>
+      <p class="dialog__hint dialog__hint--short" id="therapy-hint">Scrivi quello che ti hanno indicato il medico o il
+        farmacista.</p>
 
       <div class="dialog__buttons">
         <button type="button" class="dialog__button" id="therapy-cancel">Annulla</button>
@@ -781,7 +1480,8 @@
       <h2 class="dialog__title" id="appointment-title">Nuovo appuntamento</h2>
 
       <label class="field">Che appuntamento è
-        <input class="field__input" type="text" id="appointment-name" maxlength="50" required placeholder="Es. Visita reumatologo">
+        <input class="field__input" type="text" id="appointment-name" maxlength="50" required
+          placeholder="Es. Visita reumatologo">
       </label>
 
       <label class="field">Giorno
@@ -793,21 +1493,25 @@
       </label>
 
       <label class="field">Dove (facoltativo)
-        <input class="field__input" type="text" id="appointment-place" maxlength="60" placeholder="Es. Ospedale, 2° piano">
+        <input class="field__input" type="text" id="appointment-place" maxlength="60"
+          placeholder="Es. Ospedale, 2° piano">
       </label>
 
       <label class="field">Una nota (facoltativo)
-        <input class="field__input" type="text" id="appointment-note" maxlength="80" placeholder="Es. portare le analisi">
+        <input class="field__input" type="text" id="appointment-note" maxlength="80"
+          placeholder="Es. portare le analisi">
       </label>
 
-      <p class="dialog__hint dialog__hint--short" id="appointment-hint">Ti avviso la sera prima e un'ora e mezza prima.</p>
+      <p class="dialog__hint dialog__hint--short" id="appointment-hint">Ti avviso la sera prima e un'ora e mezza prima.
+      </p>
 
       <div class="dialog__buttons">
         <button type="button" class="dialog__button" id="appointment-cancel">Annulla</button>
         <button type="submit" class="dialog__button dialog__button--primary">Salva</button>
       </div>
       <div class="dialog__buttons">
-        <button type="button" class="dialog__button dialog__button--danger" id="appointment-delete" hidden>Elimina</button>
+        <button type="button" class="dialog__button dialog__button--danger" id="appointment-delete"
+          hidden>Elimina</button>
       </div>
     </form>
   </dialog>
@@ -871,26 +1575,36 @@
       { id: 'contorno-occhi', name: 'Contorno occhi', icon: 'visibility', color: 'gold', freq: 'daily', when: 'both', avoid: [] },
       { id: 'crema-notte', name: 'Crema notte', icon: 'bedtime', color: 'pink', freq: 'daily', when: 'evening', avoid: [] },
       { id: 'balsamo-labbra', name: 'Balsamo labbra', icon: 'spa', color: 'gold', freq: 'daily', when: 'evening', avoid: [] },
-      { id: 'retinolo', name: 'Retinolo', icon: 'auto_fix_high', color: 'pink', freq: 'weekly', when: 'evening',
+      {
+        id: 'retinolo', name: 'Retinolo', icon: 'auto_fix_high', color: 'pink', freq: 'weekly', when: 'evening',
         perWeek: 2, preferred: [1, 4],
         boost: { needs: ['macchie', 'antieta'], perWeek: 3, preferred: [0, 2, 4] },
-        avoid: ['acidi', 'esfoliante', 'maschera-argilla'] },
-      { id: 'acidi', name: 'Acido esfoliante (AHA/BHA)', icon: 'experiment', color: 'gold', freq: 'weekly', when: 'evening',
+        avoid: ['acidi', 'esfoliante', 'maschera-argilla']
+      },
+      {
+        id: 'acidi', name: 'Acido esfoliante (AHA/BHA)', icon: 'experiment', color: 'gold', freq: 'weekly', when: 'evening',
         perWeek: 1, preferred: [3],
         boost: { needs: ['acne', 'macchie'], perWeek: 2, preferred: [3, 6] },
-        avoid: ['retinolo', 'esfoliante', 'maschera-argilla'] },
-      { id: 'esfoliante', name: 'Esfoliante / scrub viso', icon: 'cleaning_services', color: 'pink', freq: 'weekly', when: 'evening',
+        avoid: ['retinolo', 'esfoliante', 'maschera-argilla']
+      },
+      {
+        id: 'esfoliante', name: 'Esfoliante / scrub viso', icon: 'cleaning_services', color: 'pink', freq: 'weekly', when: 'evening',
         perWeek: 1, preferred: [2],
         boost: { needs: ['grassa', 'acne'], perWeek: 2, preferred: [2, 5] },
-        avoid: ['retinolo', 'acidi', 'maschera-argilla'] },
-      { id: 'maschera-argilla', name: 'Maschera purificante (argilla)', icon: 'texture', color: 'gold', freq: 'weekly', when: 'evening',
+        avoid: ['retinolo', 'acidi', 'maschera-argilla']
+      },
+      {
+        id: 'maschera-argilla', name: 'Maschera purificante (argilla)', icon: 'texture', color: 'gold', freq: 'weekly', when: 'evening',
         perWeek: 1, preferred: [6],
         boost: { needs: ['grassa'], perWeek: 2, preferred: [6, 3] },
-        avoid: ['retinolo', 'acidi', 'esfoliante'] },
-      { id: 'maschera-idratante', name: 'Maschera idratante', icon: 'face', color: 'pink', freq: 'weekly', when: 'evening',
+        avoid: ['retinolo', 'acidi', 'esfoliante']
+      },
+      {
+        id: 'maschera-idratante', name: 'Maschera idratante', icon: 'face', color: 'pink', freq: 'weekly', when: 'evening',
         perWeek: 1, preferred: [0],
         boost: { needs: ['secca'], perWeek: 2, preferred: [0, 3] },
-        avoid: [] },
+        avoid: []
+      },
       { id: 'scrub-capelli', name: 'Scrub capelli', icon: 'air', color: 'gold', freq: 'weekly', when: 'evening', fixedDays: [3], avoid: [] },
       { id: 'pennelli', name: 'Cambio pennelli', icon: 'brush', color: 'pink', freq: 'weekly', when: 'evening', fixedDays: [5], avoid: [] },
       { id: 'asciugamano', name: 'Cambio asciugamano', icon: 'dry_cleaning', color: 'gold', freq: 'weekly', when: 'evening', fixedDays: [6], avoid: [] },
@@ -1114,10 +1828,15 @@
 
     // Segna (o toglie) il "fatto di oggi" per un prodotto "1 volta a settimana":
     // la prossima volta diventa tra 7 giorni da oggi, qualunque giorno fosse previsto
-    function applyRollingDone(product, isDone) {
-      const todayNumber = getTodayNumber();
+    // doneDay (facoltativo) = il giorno da segnare; se manca è oggi. Serve anche per correggere i giorni passati
+    function applyRollingDone(product, isDone, doneDay) {
+      const todayNumber = doneDay === undefined ? getTodayNumber() : doneDay;
 
       if (isDone) {
+        // Se hai già segnato un giorno più recente, la settimana riparte da quello: non la sposto indietro
+        if (product.lastDone !== null && product.lastDone !== undefined && product.lastDone > todayNumber) {
+          return;
+        }
         product.prevNextDue = getNextDue(product);   // ricordo i valori di prima, per poter annullare
         product.prevLastDone = product.lastDone;
         product.lastDone = todayNumber;
@@ -1536,6 +2255,14 @@
         return;
       }
 
+      // Scorciatoia per correggere ieri (per esempio se hai fatto la routine dopo mezzanotte)
+      const yesterdayButton = document.createElement('button');
+      yesterdayButton.type = 'button';
+      yesterdayButton.className = 'link-button';
+      yesterdayButton.dataset.action = 'edit-yesterday';
+      yesterdayButton.textContent = 'Hai dimenticato di segnare qualcosa di ieri? Modificalo qui';
+      agendaView.appendChild(yesterdayButton);
+
       for (let offset = 0; offset < 7; offset++) {
         const date = getDateWithOffset(offset);
         const dateKey = getDateKey(date);
@@ -1573,6 +2300,70 @@
     // Giorno scelto (numero di giorni) e primo giorno del mese mostrato
     let calendarSelected = getTodayNumber();
     let calendarMonthStart = getTodayNumber();
+    let calendarEditing = false;   // true = stai correggendo un giorno passato
+
+    // Tutte le voci che si possono segnare in un giorno passato (anche quelle che non erano in programma)
+    function getAllItemsForDay(dayNumber) {
+      const items = [];
+
+      products.forEach(function (product) {
+        if (dayNumber < product.createdOn) {
+          return; // il prodotto non esisteva ancora in quel giorno
+        }
+        const type = getType(product.type);
+
+        getMoments(type).forEach(function (moment) {
+          items.push({
+            id: product.id + '_' + moment,
+            productId: product.id,
+            name: product.name,
+            type: type,
+            moment: moment,
+            time: product.times[moment],
+            lateSince: 0,
+            warnWith: []
+          });
+        });
+      });
+
+      return items.sort(sortByTime);
+    }
+
+    // Pulsante piccolo con un'azione (usato per "Modifica" e "Finito")
+    function createActionButton(text, action) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'small-button small-button--spaced';
+      button.dataset.action = action;
+      button.textContent = text;
+      return button;
+    }
+
+    // Giorno passato in modifica: tutte le voci con la spunta, per aggiungere o togliere
+    function renderCalendarEditList() {
+      const dateKey = getDateKeyFromDayNumber(calendarSelected);
+      const items = getAllItemsForDay(calendarSelected);
+
+      const hint = document.createElement('p');
+      hint.className = 'group-note';
+      hint.textContent = 'Tocca il cerchio per segnare (o togliere) quello che hai fatto in questo giorno.';
+      calendarDetail.appendChild(hint);
+
+      if (items.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'empty-day';
+        empty.textContent = 'Non c\'erano prodotti in questo giorno.';
+        calendarDetail.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement('ul');
+      list.className = 'checklist__list';
+      items.forEach(function (item) {
+        list.appendChild(createAgendaCard(item, true, isItemDone(dateKey, item.id)));
+      });
+      calendarDetail.appendChild(list);
+    }
 
     // Voci da mostrare in un giorno: nel passato quello che hai segnato, da oggi in poi quello previsto
     function getCalendarEntries(dayNumber, week) {
@@ -1654,6 +2445,15 @@
       if (calendarSelected === todayNumber) { title.textContent = 'Oggi · ' + title.textContent; }
       calendarDetail.appendChild(title);
 
+      // Giorno passato: puoi correggerlo (per esempio se hai fatto la routine dopo mezzanotte)
+      if (calendarSelected < todayNumber) {
+        calendarDetail.appendChild(createActionButton(calendarEditing ? 'Finito' : 'Modifica', 'toggle-edit'));
+        if (calendarEditing) {
+          renderCalendarEditList();
+          return;
+        }
+      }
+
       if (entries.length === 0) {
         const empty = document.createElement('p');
         empty.className = 'empty-day';
@@ -1696,7 +2496,44 @@
       const dayButton = event.target.closest('.calendar__day[data-day]');
       if (dayButton === null) { return; }
       calendarSelected = Number(dayButton.dataset.day);
+      calendarEditing = false;
       renderCalendar();
+    }
+
+    // "Modifica" / "Finito" nel dettaglio del giorno
+    function handleCalendarDetailClick(event) {
+      if (event.target.closest('[data-action="toggle-edit"]') === null) { return; }
+      calendarEditing = !calendarEditing;
+      renderCalendar();
+    }
+
+    // Spunta in un giorno passato: aggiorna la cronologia di quel giorno
+    function handleCalendarDetailChange(event) {
+      const target = event.target;
+      if (!target.classList.contains('check__input')) { return; }
+
+      const item = getAllItemsForDay(calendarSelected).find(function (candidate) {
+        return candidate.id === target.dataset.itemId;
+      });
+      if (item === undefined) { return; }
+
+      setItemDone(getDateKeyFromDayNumber(calendarSelected), item, target.checked);
+
+      // Prodotto "1 volta a settimana": la settimana riparte dal giorno che hai corretto
+      const product = getProductById(item.productId);
+      if (getEffectiveKind(product) === 'rolling') {
+        applyRollingDone(product, target.checked, calendarSelected);
+      }
+      renderAll();
+    }
+
+    // Dall'Agenda: salta alla correzione di ieri (utile se hai fatto la routine dopo mezzanotte)
+    function openYesterdayEdit() {
+      calendarSelected = getTodayNumber() - 1;
+      calendarMonthStart = calendarSelected;
+      calendarEditing = true;
+      renderCalendar();
+      document.querySelector('#tab-calendar').click();
     }
 
     // Cambia mese: porta il "mese mostrato" al primo del mese precedente/successivo
@@ -1707,6 +2544,8 @@
     }
 
     calendarGrid.addEventListener('click', handleCalendarClick);
+    calendarDetail.addEventListener('click', handleCalendarDetailClick);
+    calendarDetail.addEventListener('change', handleCalendarDetailChange);
     document.querySelector('#calendar-prev').addEventListener('click', function () { moveCalendarMonth(-1); });
     document.querySelector('#calendar-next').addEventListener('click', function () { moveCalendarMonth(1); });
 
@@ -2054,6 +2893,10 @@
 
     /* === SPUNTE NELL'AGENDA (solo oggi) === */
     // Un solo "ascoltatore" per tutta l'agenda: capisce cosa è cambiato guardando event.target
+    agendaView.addEventListener('click', function (event) {
+      if (event.target.closest('[data-action="edit-yesterday"]') !== null) { openYesterdayEdit(); }
+    });
+
     function handleAgendaChange(event) {
       const target = event.target;
 
@@ -2622,6 +3465,7 @@
     // Stato della sezione Salute
     let healthSelected = getTodayNumber();       // giorno scelto nel calendario
     let healthMonthStart = getTodayNumber();     // mese mostrato nel calendario
+    let healthEditing = false;                   // true = stai correggendo un giorno passato
     let editingTherapyId = '';                   // vuoto = stai creando una terapia nuova
     let editingAppointmentId = '';
     let selectedDays = [];                       // giorni scelti nella finestra della terapia (0 = lunedì)
@@ -3075,6 +3919,14 @@
       quietButton.dataset.action = 'quiet';
       quietButton.textContent = health.quietDay === dateKey ? 'Annulla la giornata no' : 'Oggi è una giornata no (niente promemoria dell\'acqua)';
       healthTodayView.appendChild(quietButton);
+
+      // Scorciatoia per correggere ieri
+      const yesterdayButton = document.createElement('button');
+      yesterdayButton.type = 'button';
+      yesterdayButton.className = 'link-button';
+      yesterdayButton.dataset.action = 'edit-yesterday';
+      yesterdayButton.textContent = 'Hai dimenticato di segnare qualcosa di ieri? Modificalo qui';
+      healthTodayView.appendChild(yesterdayButton);
     }
 
     /* --- Disegno: calendario della salute --- */
@@ -3161,6 +4013,15 @@
       title.textContent = (healthSelected === todayNumber ? 'Oggi · ' : '') + capitalize(formatDayNumber(healthSelected));
       healthCalendarDetail.appendChild(title);
 
+      // Giorno passato: puoi correggere cosa hai preso e quanta acqua hai bevuto
+      if (healthSelected < todayNumber) {
+        healthCalendarDetail.appendChild(createActionButton(healthEditing ? 'Finito' : 'Modifica', 'toggle-health-edit'));
+        if (healthEditing) {
+          renderHealthEditList();
+          return;
+        }
+      }
+
       if (info.appointments.length === 0 && info.doses.length === 0) {
         healthCalendarDetail.appendChild(createEmptyText(healthSelected < todayNumber ? 'Non hai segnato nulla in questo giorno.' : 'Niente in programma.'));
       }
@@ -3190,6 +4051,49 @@
       addButton.dataset.action = 'add-appointment-here';
       addButton.textContent = '+ Appuntamento in questo giorno';
       healthCalendarDetail.appendChild(addButton);
+    }
+
+    // Giorno passato in modifica: le terapie previste con la spunta e il contatore dell'acqua
+    function renderHealthEditList() {
+      const dateKey = getDateKeyFromDayNumber(healthSelected);
+      const items = getHealthItemsForDay(healthSelected).filter(function (item) {
+        return item.therapy.createdOn <= healthSelected;   // la terapia esisteva già in quel giorno
+      });
+
+      const hint = document.createElement('p');
+      hint.className = 'group-note';
+      hint.textContent = 'Tocca il cerchio per segnare (o togliere) quello che hai preso in questo giorno.';
+      healthCalendarDetail.appendChild(hint);
+
+      if (items.length > 0) {
+        const list = createList();
+        items.forEach(function (item) {
+          list.appendChild(createDoseCard(item, isDoseTaken(dateKey, item.key)));
+        });
+        healthCalendarDetail.appendChild(list);
+      }
+
+      // Acqua di quel giorno
+      const water = document.createElement('div');
+      water.className = 'water';
+      water.innerHTML = `
+        <p class="water__count">${getWaterCount(dateKey)} / ${health.waterGoal} bicchieri</p>
+        <p class="water__sub">Acqua di questo giorno</p>
+        <div class="water__buttons">
+          <button type="button" class="water__button" data-action="water-day-minus" aria-label="Togli un bicchiere">−</button>
+          <button type="button" class="water__button water__button--primary" data-action="water-day-plus">+ 1 bicchiere</button>
+        </div>
+      `;
+      healthCalendarDetail.appendChild(water);
+    }
+
+    // Dalla scheda Oggi: salta alla correzione di ieri
+    function openHealthYesterdayEdit() {
+      healthSelected = getTodayNumber() - 1;
+      healthMonthStart = healthSelected;
+      healthEditing = true;
+      renderHealthCalendar();
+      document.querySelector('.htab[data-hview="calendar"]').click();
     }
 
     function moveHealthMonth(step) {
@@ -3341,6 +4245,11 @@
       const action = button.dataset.action;
       const dateKey = getDateKey(new Date());
 
+      if (action === 'edit-yesterday') {
+        openHealthYesterdayEdit();
+        return;
+      }
+
       if (action === 'water-plus') { health.water[dateKey] = getWaterCount(dateKey) + 1; }
       if (action === 'water-minus') { health.water[dateKey] = Math.max(0, getWaterCount(dateKey) - 1); }
       if (action === 'water-reminders') { health.waterReminders = !health.waterReminders; }
@@ -3373,7 +4282,26 @@
         return;
       }
       healthSelected = Number(dayButton.dataset.day);
+      healthEditing = false;
       renderHealthCalendar();
+    }
+
+    // Spunta in un giorno passato
+    function handleHealthDetailChange(event) {
+      const target = event.target;
+      if (!target.classList.contains('check__input')) {
+        return;
+      }
+
+      const item = getHealthItemsForDay(healthSelected).find(function (candidate) {
+        return candidate.key === target.dataset.doseKey;
+      });
+      if (item === undefined) {
+        return;
+      }
+
+      setDoseTaken(getDateKeyFromDayNumber(healthSelected), item, target.checked);
+      renderHealth();
     }
 
     function handleHealthDetailClick(event) {
@@ -3381,6 +4309,22 @@
       if (editButton !== null) {
         openAppointmentDialog(editButton.dataset.editAppointment);
         return;
+      }
+
+      const actionButton = event.target.closest('[data-action]');
+      if (actionButton !== null) {
+        const action = actionButton.dataset.action;
+        const dateKey = getDateKeyFromDayNumber(healthSelected);
+
+        if (action === 'toggle-health-edit') { healthEditing = !healthEditing; }
+        if (action === 'water-day-plus') { health.water[dateKey] = getWaterCount(dateKey) + 1; }
+        if (action === 'water-day-minus') { health.water[dateKey] = Math.max(0, getWaterCount(dateKey) - 1); }
+
+        if (action === 'toggle-health-edit' || action === 'water-day-plus' || action === 'water-day-minus') {
+          saveHealth();
+          renderHealth();
+          return;
+        }
       }
       if (event.target.closest('[data-action="add-appointment-here"]') !== null) {
         openAppointmentDialog('', healthSelected);
@@ -3404,6 +4348,7 @@
     healthTodayView.addEventListener('change', handleHealthTodayChange);
     healthCalendarGrid.addEventListener('click', handleHealthCalendarClick);
     healthCalendarDetail.addEventListener('click', handleHealthDetailClick);
+    healthCalendarDetail.addEventListener('change', handleHealthDetailChange);
     healthManageView.addEventListener('click', handleHealthManageClick);
     document.querySelector('#health-calendar-prev').addEventListener('click', function () { moveHealthMonth(-1); });
     document.querySelector('#health-calendar-next').addEventListener('click', function () { moveHealthMonth(1); });
@@ -4069,12 +5014,12 @@
     function scheduleSync() {
       if (currentUser === null) { return; }
       clearTimeout(syncTimer);
-      syncTimer = setTimeout(function () { pushToCloud().catch(function () {}); }, 1500);
+      syncTimer = setTimeout(function () { pushToCloud().catch(function () { }); }, 1500);
     }
 
     window.addEventListener('app-saved', scheduleSync);
     document.addEventListener('visibilitychange', function () {
-      if (document.visibilityState === 'visible') { pullFromCloud().catch(function () {}); }
+      if (document.visibilityState === 'visible') { pullFromCloud().catch(function () { }); }
     });
 
     /* === NOTIFICHE AD APP CHIUSA === */
@@ -4094,7 +5039,7 @@
             return setDoc(userDoc(), { tokens: arrayUnion(token) }, { merge: true });
           }
         });
-      }).catch(function () {});
+      }).catch(function () { });
     }
 
     window.addEventListener('notify-granted', registerPush);
@@ -4105,9 +5050,10 @@
       showAccountState();
 
       if (user !== null) {
-        pullFromCloud().then(registerPush).catch(function () {});
+        pullFromCloud().then(registerPush).catch(function () { });
       }
     });
   </script>
 </body>
+
 </html>
